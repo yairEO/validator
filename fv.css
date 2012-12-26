@@ -1,0 +1,68 @@
+html, body{ height:100%; }
+/* body min-width is 992px because it's 960px grid + extra 16px from each side of the header */
+body{ min-width:960px; color:#444; background-color:#F1F1F1; font-size:12px; line-height:1.5em; font-family:Arial, Helvetica, sans-serif; }
+
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+    margin:0;
+    padding:0;
+    border:0;
+    vertical-align:baseline;
+}
+
+small{ font-size:0.9em; }
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display:block;
+}
+
+h1{ font-size:2em; margin:0 0 50px 0; }
+button{ cursor:pointer; }
+p{ padding:5px 0; }
+
+#wrap{ padding:50px; width:860px; background-color:#FFF; margin:50px auto; border:1px dashed #AAA; }
+
+input, textarea{ border:1px solid #D1D1D1; }
+input, select{ font-size:inherit; }
+input:focus, textarea:focus{ border-color:#AAA; }
+
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+input[type=checkbox]{ border:none; bottom:-1px; cursor:pointer; margin:0 5px 0 0; position:relative; }
+button[type=submit]{ font-size:1.1em; padding:5px 25px; }
+
+/* Tooltips helpers */
+.item .tooltip{ float:left; top:2px; left:7px; position:relative; z-index:2; }
+.item .tooltip:hover{ z-index:3; }
+   .item .tooltip > span{ display:inline-block; width:16px; height:16px; line-height:16px; font-size:0.9em; font-weight:bold; text-align:center; color:#FFF; cursor:help; background-color:#00AEEF; position:relative; border-radius:10px; }
+    .item .tooltip .content{ opacity:0; width:200px; background-color:#333; color:#FFF; font-size:0.9em; position:absolute; top:0; left:20px; padding:8px; border-radius:6px; pointer-events:none; transition:0.2s cubic-bezier(0.1, 0.1, 0.25, 2); -webkit-transition:0.15s cubic-bezier(0.1, 0.2, 0.5, 1); -moz-transition:0.3s cubic-bezier(0.1, 0.2, 0.5, 2.2); }
+        .item .tooltip p{ padding:0; }
+   .item .tooltip.down .content{ left:auto; right:0; top:30px; }
+   .item .tooltip:hover .content{ opacity:1; left:36px; }
+      .item .tooltip .content b{ height:0; width:0; border-color:#333 #333 transparent transparent; border-style:solid; border-width:9px 7px; position:absolute; left:-14px; top:8px; }
+        .item .tooltip.down .content b{ left:auto; right:6px; top:-10px; border-width:5px; border-color:transparent #333 #333 transparent; }
+
+/* alerts (when validation fails) */
+.item .alert{ float:left; margin:0 0 0 20px; padding:3px 10px; position:relative; color:#FFF; border-radius:3px 4px 4px 3px; background-color:#DD9B9E; max-width:170px; white-space:pre; z-index:1; }
+.item .alert::after{ content:''; display:block; height:0; width:0; border-color:transparent #DD9B9E transparent transparent; border-style:solid; border-width:11px 7px; position:absolute; left:-13px; top:1px; }
+
+form fieldset{ clear:both; margin:0 0 10px 0; }
+form .item{ padding:5px 0; position:relative; height:2em; }
+form .item.items{ height:auto; }
+	.item label{ float:left; }
+		.item label span{ float:left; width:160px; text-transform:capitalize; line-height:2em; }
+	.item input{ float:left; padding:3px 4px; width:210px; -webkit-transition:0.2s; -moz-transition:0.2s; transition:0.2s; }
+	.item input.short{ width:90px; }
+	.item input:focus:not([type="checkbox"]){ box-shadow:0 0 4px #00AEEF; border:1px solid #00AEEF; }
+	.item select{ float:left; width:220px; padding:2px 0; border:1px solid #CCC; text-transform:capitalize; }
+		.item select option{ padding:1px; }
+
+	.item.multi input{ float:left; margin-right:5px; width:35px; text-align:center; }
+	.item.items input{ border-top:5px solid #E1E1E1; margin:0 0 0 160px; }
