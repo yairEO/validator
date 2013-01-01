@@ -13,6 +13,16 @@
 </head>
 <body>
 	<div id='wrap'>
+		<div class='options'>
+			<label>
+				<input type='checkbox' id='vfields' />
+				Vertical orientation
+			</label>
+			<label>
+				<input type='checkbox' id='alerts' />
+				Disable alerts
+			</label>
+		</div>
 		<h1 title='how forms should be done.'>Forms: validation, styling &amp; semantics</h1>
 		<section class='form'>
 			<form action="" method="post" novalidate>
@@ -20,7 +30,7 @@
 					<div class="item">
 						<label>
 							<span>Name</span>
-							<input data-validate-lengthRange="6" data-validate-words="2" name="name" placeholder="ex. John f. Kennedy" required="required" type="text" />		
+							<input data-validate-length-range="6" data-validate-words="2" name="name" placeholder="ex. John f. Kennedy" required="required" type="text" />		
 						</label>
 						<div class='tooltip help'>
 							<span>?</span>
@@ -29,6 +39,20 @@
 								<p>Name must be at least 2 words</p>
 							</div>
 						</div>
+					</div>
+					<div class="item">
+						<label>
+							<span>Occupation</span>
+							<input class='optional' name="occupation" data-validate-length-range="5,20" type="text" />
+						</label>
+						<div class='tooltip help'>
+							<span>?</span>
+							<div class='content'>
+								<b></b>
+								<p>An optional field. This field is only validated when it has a value.<br /><em>Minimum 5 chars for this example.</em></p>
+							</div>
+						</div>
+                        <span class='extra'>(optional)</span>
 					</div>
 					<div class="item">
 						<label>
@@ -64,8 +88,15 @@
 					<div class="item">
 						<label>
 							<span>Password</span>
-							<input type="password" name="password" required='required'>
+							<input type="password" name="password" data-validate-length="6,8" required='required'>
 						</label>
+						<div class='tooltip help'>
+							<span>?</span>
+							<div class='content'>
+								<b></b>
+								<p>Should be of length 6 OR 8 characters</p>
+							</div>
+						</div>
 					</div>
 					<div class="item">
 						<label>
@@ -76,7 +107,7 @@
 					<div class="item">
 						<label>
 							<span>Telephone</span>
-							<input type="tel" class='tel' name="phone" required='required' data-validate-lengthRange="8,20">
+							<input type="tel" class='tel' name="phone" required='required' data-validate-length-range="8,20">
 						</label>
 						<div class='tooltip help'>
 							<span>?</span>
@@ -110,17 +141,19 @@
 							<input name="url" placeholder="http://www.website.com" required="required" type="url" />
 						</label>
 					</div>
-					<div class="item multi">
+					<div class="item multi required">
 						<label for='multi_first'>
 							<span>Multifield</span>
 						</label>
-						<input type="text" name="multi1" maxlength='4' id='multi_first'>
-						<input type="text" name="multi2" maxlength='4'>
-						<input type="text" name="multi3" maxlength='4'>
-						<input type="text" name="multi4" maxlength='4'>
-						<input type="text" name="multi5" maxlength='4'>
-						<input type="text" name="multi6" maxlength='4'>
-						<input data-validate-lengthRange="24" data-validate-pattern="alphanumeric" id="serial" name="serial" type="hidden" required='required' />
+						<div class='input'>
+							<input type="text" name="multi1" maxlength='4' id='multi_first'>
+							<input type="text" name="multi2" maxlength='4'>
+							<input type="text" name="multi3" maxlength='4'>
+							<input type="text" name="multi4" maxlength='4'>
+							<input type="text" name="multi5" maxlength='4'>
+							<input type="text" name="multi6" maxlength='4'>
+							<input data-validate-length-range="24" data-validate-pattern="alphanumeric" id="serial" name="serial" type="hidden" required='required' />
+						</div>
 						<div class='tooltip help'>
 							<span>?</span>
 							<div class='content'>
@@ -129,27 +162,33 @@
 							</div>
 						</div>
 					</div>
+					<div class="item">
+						<label>
+							<span>message</span>
+							<textarea required="required" name='message'></textarea>
+						</label>
+					</div>
 				</fieldset>
 				<fieldset>
 					<p>There is a hidden "Required" form field below, notice it will not be validated due to its lack of visibility. The reason for this is that sometimes there is a section in a form that is not visible until some action is taken, but you do not want to change all those fields' "required" attributes on-the-fly, so that is why.</p>
-					<div class="item" style='display:none'>
-						<input name="somethingHidden" required="required" type="text" />
-					</div>
+					<input name="somethingHidden" required="required" type="text" style='display:none' />
 				</fieldset>
 				<button id='send' type='submit'>Submit</button>
 			</form>	
 		</section>
 	</div>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
     <script src="multifield.js"></script>
     <script src="validator.js"></script>
 	<script>
 		// initialize the validator function
-		var v = validator();
-		
-		v.message['date'] = 'not a real date';
-		// validate a field on "blur" event
-		$('form').on('blur', 'input[required]', v.checkField);
+		validator.message['date'] = 'not a real date';
+		// validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
+		$('form').on('blur', 'input[required], input.optional', validator.checkField)
+			.on('change', 'select.required', validator.checkField);;
+		$('.multi.required').on('keyup', 'input', function(){ 
+			validator.checkField.apply($(this).siblings().last()[0]);
+		});
 		
 		// bind the validation to the form submit event
 		//$('#send').click('submit');//.prop('disabled', true);
@@ -158,7 +197,7 @@
 			e.preventDefault();
 			var submit = true;
 			// evaluate the form using generic validaing
-			if( !v.checkAll( $(this) ) ){
+			if( !validator.checkAll( $(this) ) ){
 				submit = false;
 			}
 
@@ -166,6 +205,17 @@
 				this.submit();
 			return false;
 		});
+		
+		/* FOR DEMO ONLY */
+		$('#vfields').change(function(){
+			$('form').toggleClass('mode2');
+		}).prop('checked',false);
+		
+		$('#alerts').change(function(){
+			validator.defaults.alerts = (this.checked) ? false : true;
+			if( this.checked )
+				$('form .alert').remove();
+		}).prop('checked',false);
 	</script>
 </body>
 </html>

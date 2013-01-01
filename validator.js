@@ -1,3 +1,10 @@
+/*
+	Validator v1.0.5
+	(c) 2012 Yair Even Or <http://dropthebit.com>
+	
+	MIT-style license.
+*/
+
 var validator = (function(){
 	var message, tests, checkField, validate, mark, unmark, field, minmax, defaults,
 		validateWords, lengthRange, lengthLimit, pattern, alertTxt, data,
@@ -149,6 +156,10 @@ var validator = (function(){
 		// Date is validated in European format (day,month,year)
 		date : function(a){
 			var day, A = a.split(/[-./]/g), i;
+			// if there is native HTML5 support:
+			if( field[0].valueAsNumber )
+				return true;
+
 			for( i = A.length; i--; ){
 				if( isNaN(parseFloat(a)) && !isFinite(a) )
 					return false;
