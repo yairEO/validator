@@ -177,18 +177,24 @@
 			</form>	
 		</section>
 	</div>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="multifield.js"></script>
     <script src="validator.js"></script>
 	<script>
 		// initialize the validator function
 		validator.message['date'] = 'not a real date';
+		
 		// validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
-		$('form').on('blur', 'input[required], input.optional', validator.checkField)
-			.on('change', 'select.required', validator.checkField);;
-		$('.multi.required').on('keyup', 'input', function(){ 
-			validator.checkField.apply($(this).siblings().last()[0]);
-		});
+		$('form')
+			.on('blur', 'input[required], input.optional, select.required', validator.checkField)
+			.on('change', 'select.required', validator.checkField);
+			
+		$('.multi.required')
+			.on('keyup', 'input', function(){ 
+				validator.checkField.apply( $(this).siblings().last()[0] );
+			}).on('blur', 'input', function(){ 
+				validator.checkField.apply( $(this).siblings().last()[0] );
+			});
 		
 		// bind the validation to the form submit event
 		//$('#send').click('submit');//.prop('disabled', true);

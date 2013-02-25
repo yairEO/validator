@@ -56,13 +56,12 @@ button[type=submit]{ font-size:1.1em; padding:5px 25px; }
 .item .alert::after{ content:''; display:block; height:0; width:0; border-color:transparent #CE5454 transparent transparent; border-style:solid; border-width:11px 7px; position:absolute; left:-13px; top:1px; }
 
 @-moz-keyframes shake{
-    25%{ left: -6px; }
-    75%{ left: 6px; }
+    25%{ transform:translateX(-6px); }
+    75%{ transform:translateX(6px); }
 }
 @-webkit-keyframes shake{
-    33%{ left: -6px; }
-    50%{ left:0; }
-    66%{ left: 6px; }
+    25%{ -webkit-transform:translateX(-6px); }
+    75%{ -webkit-transform:translateX(6px); }
 }
 
 form fieldset{ clear:both; margin:0 0 10px 0; }
