@@ -28,7 +28,13 @@ h1{ font-size:2em; margin:0 0 50px 0; }
 button{ cursor:pointer; }
 p{ padding:5px 0; }
 
-#wrap{ padding:50px; width:860px; background-color:#FFF; margin:50px auto; border:1px dashed #AAA; position:relative; }
+a{ text-decoration:none; }
+.btn{ margin:5px; font-size:1.3em; font-weight:bold; border:2px solid rgba(0,0,0,0.2); display:inline-block; box-shadow:0 -30px 30px -15px #00329B inset, 0 1px 0 rgba(255,255,255,0.3) inset; background:#0088CC; background-repeat:repeat-x; color:#FFF; text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25); border-radius:7px; padding:10px 20px; -webkit-transition:0.15s; transition:0.15s; }
+.btn:hover{ background:#0068BA; }
+.btn:active{ box-shadow:0 0 0 0 rgba(0, 0, 0, 0.3), 0 -30px 30px -15px #00329B inset, 0 0 6px #00243F inset; }
+.btn.github{ float:right; }
+
+#wrap{ padding:50px; width:860px; background-color:#FFF; margin:20px auto; border:1px dashed #AAA; position:relative; }
 .options{ position:absolute; top:-1px; right:-1px; background-color:#F1F1F1; padding:4px 0; border-left:1px dashed #AAA; border-bottom:1px dashed #AAA; }
 	.options label{ cursor:pointer; margin:0 10px; }
 
@@ -55,7 +61,7 @@ button[type=submit]{ font-size:1.1em; padding:5px 25px; }
 .item .alert{ float:left; margin:0 0 0 20px; padding:3px 10px; position:relative; color:#FFF; border-radius:3px 4px 4px 3px; background-color:#CE5454; max-width:170px; white-space:pre; z-index:1; }
 .item .alert::after{ content:''; display:block; height:0; width:0; border-color:transparent #CE5454 transparent transparent; border-style:solid; border-width:11px 7px; position:absolute; left:-13px; top:1px; }
 
-@-moz-keyframes shake{
+@keyframes shake{
     25%{ transform:translateX(-6px); }
     75%{ transform:translateX(6px); }
 }
