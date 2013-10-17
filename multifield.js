@@ -2,20 +2,22 @@
 // By Yair Even Or / 2011 / dropthebit.com
 ;(function(){
 	function keypress(e){
-		var nextPrevField;
+		var nextPrevField,
+			sel = [this.selectionStart, this.selectionEnd];
 
 		if( !e.charCode && e.keyCode != 37 && e.keyCode != 39 && e.keyCode != 8 )			
 			return;	
 			
-		// if hit Backspace key when the field it empty, go back one field		
-		else if( (e.keyCode == 8 && this.selectionEnd ==0) || (e.keyCode == 37 && this.selectionEnd == 0) )			
+		// if hit Backspace key when caret was at the beginning, or if the 'left' arrow key was pressed and the caret was at the start -> go back to previous field	
+		else if( (e.keyCode == 8 && sel[1] == 0) || (e.keyCode == 37 && sel[1] == 0) )			
 			setCaret( $(this).prev(':text')[0], 100);
 		
-		else if( e.keyCode == 39 && this.selectionEnd == this.value.length )	
+		// if the 'right' arrow key was pressed and caret was at the end -> advance to the next field
+		else if( e.keyCode == 39 && sel[1] == this.value.length )	
 			setCaret( $(this).next(':text')[0], 0);
 		
 		// automatically move to the next field once user has filled the current one completely		
-		else if( e.charCode && this.selectionEnd == this.selectionStart && this.selectionStart == this.maxLength-1 )
+		else if( e.charCode && sel[1] == sel[0] && sel[0] == this.maxLength-1 )
 			setCaret( $(this).next(':text')[0], 100);
 
 		function setCaret(input, pos){
