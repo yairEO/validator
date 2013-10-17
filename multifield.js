@@ -3,21 +3,23 @@
 ;(function(){
 	function keypress(e){
 		var nextPrevField;
-		// Ignore: [tab, ctrl, alt, left & right arrows]		
-		if( /9|17|18|37|39/.test(e.keyCode) )			
-			return;		
+		// Ignore: [tab, ctrl, alt, left & right arrows]	 // if( /9|17|18|37|39/.test(e.keyCode) )		
+		if( [9,17,18].indexOf(e.keyCode) != -1 )			
+			return;	
+			
 		// if hit Backspace key when the field it empty, go back one field		
-		if( e.keyCode == 8 && !this.value )			
-			nextPrevField = $(this).prev()[0];
+		else if( (e.keyCode == 8 && this.selectionEnd ==0) || (e.keyCode == 37 && this.selectionEnd == 0) )			
+			setCaret( $(this).prev(':text')[0], 100);
+		
+		else if( e.keyCode == 39 && this.selectionEnd == this.value.length )	
+			setCaret( $(this).next(':text')[0], 0);
+		
 		// automatically move to the next field once user has filled the current one completely		
-		else if( this.value.length == this.maxLength && e.keyCode != 8 )			
-			nextPrevField = $(this).next(':text')[0];
-
-		// set the caret at the END of the inupt element
-		if( nextPrevField )
-			setCaret( nextPrevField, 100);
+		else if( e.charCode && this.value.length == this.maxLength && e.keyCode != 8 )			
+			setCaret( $(this).next(':text')[0], 100);
 
 		function setCaret(input, pos){
+			if( !input ) return;
 			if (input.setSelectionRange){
 				input.focus();
 				input.setSelectionRange(pos, pos);
@@ -41,5 +43,5 @@
 		});
 	}
 
-	$('div.multi').on({'keyup.multifeild':keypress, 'change.multifeild':combine}, 'input');
+	$('div.multi').on({'keypress.multifeild':keypress, 'change.multifeild':combine}, 'input');
 })();
