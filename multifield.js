@@ -3,8 +3,8 @@
 ;(function(){
 	function keypress(e){
 		var nextPrevField;
-		// Ignore: [tab, ctrl, alt, left & right arrows]	 // if( /9|17|18|37|39/.test(e.keyCode) )		
-		if( [9,17,18].indexOf(e.keyCode) != -1 )			
+
+		if( !e.charCode && e.keyCode != 37 && e.keyCode != 39 && e.keyCode != 8 )			
 			return;	
 			
 		// if hit Backspace key when the field it empty, go back one field		
@@ -15,7 +15,7 @@
 			setCaret( $(this).next(':text')[0], 0);
 		
 		// automatically move to the next field once user has filled the current one completely		
-		else if( e.charCode && this.value.length == this.maxLength && e.keyCode != 8 )			
+		if( e.charCode && this.selectionEnd == this.selectionStart && this.selectionStart == this.maxLength )
 			setCaret( $(this).next(':text')[0], 100);
 
 		function setCaret(input, pos){
@@ -23,7 +23,7 @@
 			if (input.setSelectionRange){
 				input.focus();
 				input.setSelectionRange(pos, pos);
-			} 
+			}
 			else if( input.createTextRange ){
 				var range = input.createTextRange();
 				range.collapse(true);
