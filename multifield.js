@@ -15,7 +15,7 @@
 			setCaret( $(this).next(':text')[0], 0);
 		
 		// automatically move to the next field once user has filled the current one completely		
-		if( e.charCode && this.selectionEnd == this.selectionStart && this.selectionStart == this.maxLength )
+		else if( e.charCode && this.selectionEnd == this.selectionStart && this.selectionStart == this.maxLength-1 )
 			setCaret( $(this).next(':text')[0], 100);
 
 		function setCaret(input, pos){
