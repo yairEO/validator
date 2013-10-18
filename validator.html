@@ -58,6 +58,19 @@
 					</div>
 					<div class="item">
 						<label>
+							<span>HTML5 Regex</span>
+							<input required="required" type="text" pattern='\d+' />
+						</label>
+						<div class='tooltip help'>
+							<span>?</span>
+							<div class='content'>
+								<b></b>
+								<p>This field uses HTML5 "pattern" attribute to be validated.<br /><em>"<strong>\d+</strong>" - only digits are allowed</em></p>
+							</div>
+						</div>
+					</div>
+					<div class="item">
+						<label>
 							<span>email</span>
 							<input name="email" class='email' required="required" type="email" />
 						</label>
@@ -189,12 +202,11 @@
 		// validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
 		$('form')
 			.on('blur', 'input[required], input.optional, select.required', validator.checkField)
-			.on('change', 'select.required', validator.checkField);
+			.on('change', 'select.required', validator.checkField)
+			.on('keypress', 'input[required][pattern]', validator.keypress);
 			
 		$('.multi.required')
-			.on('keyup', 'input', function(){ 
-				validator.checkField.apply( $(this).siblings().last()[0] );
-			}).on('blur', 'input', function(){ 
+			.on('keyup blur', 'input', function(){ 
 				validator.checkField.apply( $(this).siblings().last()[0] );
 			});
 		

@@ -49,6 +49,7 @@ var validator = (function(){
 		// 'linked' is a special test case for inputs which their values should be equal to each other (ex. confirm email or retype password)
 		linked : function(a,b){
 			if( b != a ){
+				// choose a specific message or a general one
 				alertTxt = message[data.type + '_repeat'] || message.no_match;
 				return false;
 			}
@@ -80,17 +81,17 @@ var validator = (function(){
 				}
 				return true;
 			}
-			if( a.length < lengthRange[0] ){
+			if( lengthRange && a.length < lengthRange[0] ){
 				alertTxt = message.min;
 				return false;
 			}
 			// check if there is max length & field length is greater than the allowed
-			if( lengthRange[1] && a.length > lengthRange[1] ){
+			if( lengthRange && lengthRange[1] && a.length > lengthRange[1] ){
 				alertTxt = message.max;
 				return false;
 			}
 			// check if the field's value should obey any length limits, and if so, make sure the length of the value is as specified
-			if( lengthLimit.length ){
+			if( lengthLimit && lengthLimit.length ){
 				var obeyLimit = false;
 				while( lengthLimit.length ){
 					if( lengthLimit.pop() == a.length )
@@ -101,8 +102,9 @@ var validator = (function(){
 					return false;
 				}
 			}
+		
 			if( pattern ){
-				var regex;
+				var regex, jsRegex;
 				switch( pattern ){
 					case 'alphanumeric' :
 						regex = /^[a-z0-9]+$/i;
@@ -117,7 +119,8 @@ var validator = (function(){
 						regex = pattern;
 				}
 				try{
-					if( regex && !eval(regex).test(a) )
+					jsRegex = new RegExp("^"+regex+"$").test(a);
+					if( a && !jsRegex )
 						return false;
 				}
 				catch(err){
@@ -134,12 +137,12 @@ var validator = (function(){
 				return false;
 			}
 			// not enough numbers
-			else if( a.length < lengthRange[0] ){
+			else if( lengthRange && a.length < lengthRange[0] ){
 				alertTxt = message.min;
 				return false;
 			}
 			// check if there is max length & field length is greater than the allowed
-			else if( lengthRange[1] && a.length > lengthRange[1] ){
+			else if( lengthRange && lengthRange[1] && a.length > lengthRange[1] ){
 				alertTxt = message.max;
 				return false;
 			}
@@ -188,7 +191,7 @@ var validator = (function(){
 			return true;
 		},
 		hidden : function(a){
-			if( a.length < lengthRange[0] ){
+			if( lengthRange && a.length < lengthRange[0] ){
 				alertTxt = message.min;
 				return false;
 			}
@@ -248,19 +251,60 @@ var validator = (function(){
             });
 	};
 	
+	function testByType(type, value){
+		switch( type ){
+			case 'email' :
+				return tests.email(value);
+			case 'text' :
+				return tests.text(value);
+			case 'tel' :
+				pattern = pattern || 'phone';
+				return tests.text(value);
+			case 'password' :
+				return tests.text(value);
+			case 'number' :
+				return tests.number(value);
+			case 'date' :
+				return tests.date(value);
+			case 'url' :
+				return tests.url(value);
+			case 'select' :
+				return tests.select(value);
+			case 'hidden' :
+				return tests.hidden(value);
+		}
+		return true;
+	}
+	
+	function prepareFieldData(el){
+		field = $(el);
+		
+		field.data( 'valid',true );										// every field starts as 'valid=true' until proven otherwise
+		field.data( 'type', field.attr('type') );						// every field starts as 'valid=true' until proven otherwise
+		data = field.data();  											// cache the custom data attributes.
+		pattern = el.pattern;
+		
+	}
+	
+	/* Validations per-character keypress 
+	*/
+	function keypress(e){
+		prepareFieldData(this);
+		
+		if( e.charCode )
+			return testByType( data.type, String.fromCharCode(e.charCode) );
+	}
+	
 	/* Checks a single form field by it's type and specific (custom) attributes
 	*/
 	function checkField(){
-		field = $(this);
 		// skip testing fields whom their type is not HIDDEN but they are HIDDEN via CSS.
-		if( field[0].type !='hidden' && field.is(':hidden') )
+		if( this.type !='hidden' && $(this).is(':hidden') )
 			return true;
+			
+		prepareFieldData(this);
 
-		field.data( 'valid',true );										// every field starts as 'valid=true' until proven otherwise
-		field.data( 'type', field.attr('type') );						// every field starts as 'valid=true' until proven otherwise
 		field.data( 'val', field[0].value.replace(/^\s+|\s+$/g, "") );	// cache the value of the field and trim it
-		data = field.data();  											// cache the custom data attributes. first removes the DATA because jQuery has an 
-		var v = data.val;
 		
 		// Check if there is a specific error message for that field, if not, use the default 'invalid' message
 		alertTxt = message[field.prop('name')] || message.invalid;
@@ -277,12 +321,11 @@ var validator = (function(){
 		validateWords	= data['validateWords'] || 0;
 		lengthRange 	= data['validateLengthRange'] ? (data['validateLengthRange']+'').split(',') : [1];
 		lengthLimit		= data['validateLength'] ? (data['validateLength']+'').split(',') : false;
-		minmax			= data['validateMinmax'] ? (data['validateMinmax']+'').split(',') : ''; // for type 'number', defines the mininum and/or maximum for the value as a number.
-		pattern			= data['validatePattern'];
+		minmax			= data['validateMinmax'] ? (data['validateMinmax']+'').split(',') : ''; // for type 'number', defines the minimum and/or maximum for the value as a number.
 
 		/* Validate the field's value is different than the placeholder attribute (and attribute exists)
 		* this is needed when fixing the placeholders for older browsers which does not support them.
-		* in this case, make sure the "placeholder" jQuery plugin was even used before procceding
+		* in this case, make sure the "placeholder" jQuery plugin was even used before proceeding
 		*/
 		if( tests.sameAsPlaceholder(field) ){
 			alertTxt = msg.form.empty;
@@ -292,42 +335,14 @@ var validator = (function(){
 		// if this field is linked to another field (their values should be the same)
 		if( data.validateLinked ){
 			var linkedTo = data['validateLinked'].indexOf('#') == 0 ? $(data['validateLinked']) : $(':input[name=' + data['validateLinked'] + ']');
-			data.valid = tests.linked( v, linkedTo.val() );
+			data.valid = tests.linked( data.val, linkedTo.val() );
 		}
-		/* validate by type of field. use 'attr()' is preffered to get the actual value and not what the browsers sees for unsupported types.
+		/* validate by type of field. use 'attr()' is proffered to get the actual value and not what the browsers sees for unsupported types.
 		*/
-		if( data.valid && (data.valid = tests.hasValue(v)) || data.type == 'select' )
-			switch( data.type ){
-				case 'email' :
-					data.valid = tests.email(v);
-					break;
-				case 'text' :
-					data.valid = tests.text(v);
-					break;
-				case 'tel' :
-					pattern = pattern || 'phone';
-					data.valid = tests.text(v);
-					break;
-				case 'password' :
-					data.valid = tests.text(v);
-					break;
-				case 'number' :
-					data.valid = tests.number(v);
-					break;
-				case 'date' :
-					data.valid = tests.date(v);
-					break;
-				case 'url' :
-					data.valid = tests.url(v);
-					break;
-				case 'select' :
-					data.valid = tests.select(v);
-					break;
-				case 'hidden' :
-					data.valid = tests.hidden(v);
-					break;
-			}
+		else if( data.valid = tests.hasValue(data.val) || data.type == 'select' )
+			data.valid = testByType(data.type, data.val);
 
+		// optional fields are only gets validated if they are not empty
 		if( field.hasClass('optional') && !data.val )
 			data.valid = true;
 		
@@ -365,6 +380,7 @@ var validator = (function(){
 	return {
 		defaults 	: defaults,
 		checkField 	: checkField,
+		keypress 	: keypress,
 		checkAll 	: checkAll,
 		mark 		: mark,
 		unmark		: unmark,
