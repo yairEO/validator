@@ -153,7 +153,7 @@ A generic callback function using jQuery to have the form validated on the “Su
     	return false;
     })
 ###Example - 2
-Check every field once it looses focus (onBlur) event (using jQuery 1.7.1 new ‘on’ method which is like the old .deligate() in this case).
+Check every field once it looses focus (onBlur) event 
 
     $('form').on('blur', 'input[required]', validator().checkField);
 
