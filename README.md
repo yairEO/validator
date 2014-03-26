@@ -72,22 +72,22 @@ Defines that this field should be validated (with JS by my implementation and no
 **placeholder attribute**
 Writes some placeholder text which usually describes the fields with some example input (not supported in IE8 and below)
 
-**data-validate-words custom attribute**
+**data-validate-words**
 Defines the minimum amount of words for this field
 
-**data-validate-length custom attribute**
+**data-validate-length**
 Defines the length allowed for the field (after trim). Example value: “7,11″ (field can only have 7 or 11 characters). you can add how many allowed lengths you wish
 
-**data-validate-length-range custom attribute**
+**data-validate-length-range**
 Defines the minimum and/or maximum number of chars in the field (after trim). value can be “4,8″ for example, or just “4″ to set minimum chars only
 
-**data-validate-linked custom attribute**
+**data-validate-linked**
 Defines the field which the current field’s value (the attribute is set on) should be compared to
 
-**data-validate-minmax custom attribute**
+**data-validate-minmax**
 For type ‘number’ only. Defines the minimum and/or maximum value that can be in that field.
 
-**data-validate-pattern custom attribute**
+**data-validate-pattern**
 Defines a pattern which the field is evaluated with. Available values are:
 
 *numeric* - Allow only numbers
