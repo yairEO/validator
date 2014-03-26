@@ -105,6 +105,7 @@ There is also support for optional fields, which are not validated, unless they 
 
 ## Error messages
 The validator function holds a messages object called ‘message’, which itself holds all the error messages being shown to the user for all sort of validation errors.
+
     message = {
     	invalid			: 'invalid input',
     	empty			: 'please put something here',
