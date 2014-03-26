@@ -134,7 +134,7 @@ Error messages can be disabled:
 
 There are 2 ways to validate form fields, one is on the submit event of the form itself, then all the fields are evaluated one by one. The other method is by binding the ‘checkField’ function itself to each field, for events like “Blur”, “Change” or whatever event you wish (I prefer on Blur).
 
-###Example - 1
+###Usage example - validate on submit
 
 A generic callback function using jQuery to have the form validated on the **Submit** event. You can also include your own personal validations before the **checkAll()** call.
 
@@ -152,7 +152,7 @@ A generic callback function using jQuery to have the form validated on the **Sub
     		
     	return false;
     })
-###Example - 2
+###Usage example - validate on field blur event (out of focus)
 Check every field once it looses focus (onBlur) event 
 
     $('form').on('blur', 'input[required]', validator().checkField);
