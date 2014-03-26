@@ -144,7 +144,7 @@ A generic callback function using jQuery to have the form validated on the **Sub
     	// you can put your own custom validations below
     	
     	// check all the rerquired fields 
-    	if( !validator().checkAll( $(this) ) )
+    	if( !validator.checkAll( $(this) ) )
     		submit = false;
     
     	if( submit )
@@ -155,7 +155,7 @@ A generic callback function using jQuery to have the form validated on the **Sub
 ###Usage example - validate on field blur event (out of focus)
 Check every field once it looses focus (onBlur) event 
 
-    $('form').on('blur', 'input[required]', validator().checkField);
+    $('form').on('blur', 'input[required]', validator.checkField);
 
 ## Tooltips
 
