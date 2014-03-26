@@ -137,6 +137,7 @@ There are 2 ways to validate form fields, one is on the submit event of the form
 ###Example - 1
 
 A generic callback function using jQuery to have the form validated on the “Submit” event. You can also include your own personal validations before the **checkAll()** call.
+
     $('form').submit(function(e){
     	e.preventDefault();
     	var submit = true;
