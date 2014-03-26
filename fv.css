@@ -64,8 +64,12 @@ button[type=submit]{ font-size:1.1em; padding:5px 25px; }
 
 
 @keyframes shake{
-    25%{ transform:translateX(-6px); }
-    75%{ transform:translateX(6px); }
+    15%{ transform:translateX(-5px); }
+    30%{ transform:translateX(5px); }
+	45%{ transform:translateX(-3px); }
+	60%{ transform:translateX(3px); }
+	75%{ transform:translateX(2px); }
+	100%{ transform:none; }
 }
 @-webkit-keyframes shake{
     25%{ -webkit-transform:translateX(-6px); }
@@ -94,7 +98,7 @@ form .item.items{ height:auto; }
 	
 	.bad input, 
 	.bad select, 
-	.bad textarea{ border:1px solid #CE5454; box-shadow:0 0 4px -2px #CE5454; position:relative; left:0; -moz-animation:.3s 2 shake linear; -webkit-animation:0.3s 2 shake linear; }
+	.bad textarea{ border:1px solid #CE5454; box-shadow:0 0 4px -2px #CE5454; position:relative; left:0; -moz-animation:.7s 1 shake linear; -webkit-animation:0.7s 1 shake linear; }
     
 	
 /* mode2 - where the label's text is above the field and not next to it
