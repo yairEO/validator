@@ -58,8 +58,10 @@ button[type=submit]{ font-size:1.1em; padding:5px 25px; }
         .item .tooltip.down .content b{ left:auto; right:6px; top:-10px; border-width:5px; border-color:transparent #333 #333 transparent; }
 
 /* alerts (when validation fails) */
-.item .alert{ float:left; margin:0 0 0 20px; padding:3px 10px; position:relative; color:#FFF; border-radius:3px 4px 4px 3px; background-color:#CE5454; max-width:170px; white-space:pre; z-index:1; }
+.item .alert{ float:left; margin:0 0 0 20px; padding:3px 10px; color:#FFF; border-radius:3px 4px 4px 3px; background-color:#CE5454; max-width:170px; white-space:pre; position:relative; left:-15px; opacity:0; z-index:1; transition:0.15s ease-out; }
 .item .alert::after{ content:''; display:block; height:0; width:0; border-color:transparent #CE5454 transparent transparent; border-style:solid; border-width:11px 7px; position:absolute; left:-13px; top:1px; }
+.item.bad .alert{ left:0; opacity:1; }
+
 
 @keyframes shake{
     25%{ transform:translateX(-6px); }
@@ -90,8 +92,11 @@ form .item.items{ height:auto; }
 		form .item.multi input:nth-last-child(-n+2){ margin:0; }
 	.item.items input{ border-top:5px solid #E1E1E1; margin:0 0 0 160px; }
 	
-	.bad input[required=required], .bad input.optional, .bad select, .bad textarea{ border:1px solid #CE5454; box-shadow:0 0 4px -2px #CE5454; position:relative; left:0; -moz-animation:.3s 2 shake linear; -webkit-animation:0.3s 2 shake linear; }
+	.bad input, 
+	.bad select, 
+	.bad textarea{ border:1px solid #CE5454; box-shadow:0 0 4px -2px #CE5454; position:relative; left:0; -moz-animation:.3s 2 shake linear; -webkit-animation:0.3s 2 shake linear; }
     
+	
 /* mode2 - where the label's text is above the field and not next to it
 --------------------------------------------------------------------------- */
 .mode2 .item{ float:left; clear:left; margin-bottom:30px; height:auto; padding:0; zoom:1; }

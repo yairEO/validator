@@ -1,11 +1,12 @@
 /*
-	Validator v1.0.5
-	(c) 2012 Yair Even Or <http://dropthebit.com>
-	
+	Validator v1.1.0
+	(c) Yair Even Or
+	https://github.com/yairEO/validator
+
 	MIT-style license.
 */
 
-var validator = (function(){
+var validator = (function($){
 	var message, tests, checkField, validate, mark, unmark, field, minmax, defaults,
 		validateWords, lengthRange, lengthLimit, pattern, alertTxt, data,
 		email_illegalChars = /[\(\)\<\>\,\;\:\\\/\"\[\]]/,
@@ -29,12 +30,12 @@ var validator = (function(){
 		complete		: 'input is not complete',
 		select			: 'Please select an option'
 	};
-	
+
 	// defaults
 	defaults = { alerts:true };
-	
+
 	/* Tests for each type of field (including Select element)
-	*/		
+	*/
 	tests = {
 		sameAsPlaceholder : function(a){
 			return $.fn.placeholder && a.attr('placeholder') !== undefined && data.val == a.prop('placeholder');
@@ -74,7 +75,7 @@ var validator = (function(){
 							return false;
 					return true;
 				};
-				
+
 				if( words.length < validateWords || !wordsLength(2) ){
 					alertTxt = message.complete;
 					return false;
@@ -102,7 +103,7 @@ var validator = (function(){
 					return false;
 				}
 			}
-		
+
 			if( pattern ){
 				var regex, jsRegex;
 				switch( pattern ){
@@ -169,7 +170,7 @@ var validator = (function(){
 			}
 			try{
 				day = new Date(A[2], A[1]-1, A[0]);
-				if( day.getMonth()+1 == A[1] && day.getDate() == A[0] ) 
+				if( day.getMonth()+1 == A[1] && day.getDate() == A[0] )
 					return day;
 				return false;
 			}
@@ -179,7 +180,7 @@ var validator = (function(){
 			}
 		},
 		url : function(a){
-			// minimalistic URL validation 
+			// minimalistic URL validation
 			function testUrl(url){
 				return /^(https?:\/\/)?([\w\d\-_]+\.+[A-Za-z]{2,})+\/?/.test( url );
 			}
@@ -214,101 +215,86 @@ var validator = (function(){
 			return true;
 		}
 	};
-	
+
 	/* marks invalid fields
-	*/  
-    mark = function(field, text){
+	*/
+    mark = function( field, text ){
 		if( !text || !field || !field.length )
 			return false;
-		
+
 		// check if not already marked as a 'bad' record and add the 'alert' object.
 		// if already is marked as 'bad', then make sure the text is set again because i might change depending on validation
-		var item = field.parents('.item'), warning;
-        
-        item.find('.alert').remove();
-        
+		var item = field.parents('.item'),
+			warning;
+
+        item.removeClass('bad')
+        	.find('.alert').remove();
+
         if( defaults.alerts ){
-            warning = $('<div>').addClass('alert').text( text );
+            warning = $('<div class="alert">').text( text );
             item.append( warning );
         }
-        
-        item.removeClass('bad');
+		
+		// a deltay so the "alert" could be transitioned via CSS
         setTimeout(function(){
             item.addClass('bad');
         }, 0);
 	};
 	/* un-marks invalid fields
 	*/
-	unmark = function(field){
+	unmark = function( field ){
 		if( !field || !field.length ){
 			console.warn('no "field" argument, null or DOM object not found')
 			return false;
 		}
-		field.parents('.item')
-            .removeClass('bad')
-            .find('.alert').animate({ marginLeft:32, opacity:0 }, 200, function(){
-                $(this).remove();
-            });
+
+		field.parents('.item').removeClass('bad')
 	};
-	
+
 	function testByType(type, value){
-		switch( type ){
-			case 'email' :
-				return tests.email(value);
-			case 'text' :
-				return tests.text(value);
-			case 'tel' :
-				pattern = pattern || 'phone';
-				return tests.text(value);
-			case 'password' :
-				return tests.text(value);
-			case 'number' :
-				return tests.number(value);
-			case 'date' :
-				return tests.date(value);
-			case 'url' :
-				return tests.url(value);
-			case 'select' :
-				return tests.select(value);
-			case 'hidden' :
-				return tests.hidden(value);
-		}
-		return true;
+
+		if( type == 'tel' )
+			pattern = pattern || 'phone';
+
+		if( type == 'password' || type == 'tel' )
+			type = 'text';
+
+		return tests[type](value);
 	}
-	
+
 	function prepareFieldData(el){
 		field = $(el);
-		
-		field.data( 'valid',true );										// every field starts as 'valid=true' until proven otherwise
-		field.data( 'type', field.attr('type') );						// every field starts as 'valid=true' until proven otherwise
-		data = field.data();  											// cache the custom data attributes.
+
+		field.data( 'valid', true );				// initialize validness of field by first checking if it's even filled out of now
+		field.data( 'type', field.attr('type') );	// every field starts as 'valid=true' until proven otherwise
 		pattern = el.pattern;
-		
 	}
-	
-	/* Validations per-character keypress 
+
+	/* Validations per-character keypress
 	*/
 	function keypress(e){
 		prepareFieldData(this);
-		
+
 		if( e.charCode )
 			return testByType( data.type, String.fromCharCode(e.charCode) );
 	}
-	
+
 	/* Checks a single form field by it's type and specific (custom) attributes
 	*/
 	function checkField(){
 		// skip testing fields whom their type is not HIDDEN but they are HIDDEN via CSS.
 		if( this.type !='hidden' && $(this).is(':hidden') )
 			return true;
-			
+
 		prepareFieldData(this);
 
 		field.data( 'val', field[0].value.replace(/^\s+|\s+$/g, "") );	// cache the value of the field and trim it
-		
+		data = field.data();
+
+
 		// Check if there is a specific error message for that field, if not, use the default 'invalid' message
 		alertTxt = message[field.prop('name')] || message.invalid;
-		
+
 		// SELECT / TEXTAREA nodes needs special treatment
 		if( field[0].nodeName.toLowerCase() === "select" ){
 			data.type = 'select';
@@ -323,29 +309,34 @@ var validator = (function(){
 		lengthLimit		= data['validateLength'] ? (data['validateLength']+'').split(',') : false;
 		minmax			= data['validateMinmax'] ? (data['validateMinmax']+'').split(',') : ''; // for type 'number', defines the minimum and/or maximum for the value as a number.
 
-		/* Validate the field's value is different than the placeholder attribute (and attribute exists)
-		* this is needed when fixing the placeholders for older browsers which does not support them.
-		* in this case, make sure the "placeholder" jQuery plugin was even used before proceeding
-		*/
-		if( tests.sameAsPlaceholder(field) ){
-			alertTxt = msg.form.empty;
-			data.valid = false;
-		}
+		data.valid = tests.hasValue(data.val);
+		// check if field has any value
+		if( data.valid ){
+			/* Validate the field's value is different than the placeholder attribute (and attribute exists)
+			* this is needed when fixing the placeholders for older browsers which does not support them.
+			* in this case, make sure the "placeholder" jQuery plugin was even used before proceeding
+			*/
+			if( tests.sameAsPlaceholder(field) ){
+				alertTxt = message.empty;
+				data.valid = false;
+			}
 
-		// if this field is linked to another field (their values should be the same)
-		if( data.validateLinked ){
-			var linkedTo = data['validateLinked'].indexOf('#') == 0 ? $(data['validateLinked']) : $(':input[name=' + data['validateLinked'] + ']');
-			data.valid = tests.linked( data.val, linkedTo.val() );
-		}
-		/* validate by type of field. use 'attr()' is proffered to get the actual value and not what the browsers sees for unsupported types.
-		*/
-		else if( data.valid = tests.hasValue(data.val) || data.type == 'select' )
+			// if this field is linked to another field (their values should be the same)
+			if( data.validateLinked ){
+				var linkedTo = data['validateLinked'].indexOf('#') == 0 ? $(data['validateLinked']) : $(':input[name=' + data['validateLinked'] + ']');
+				data.valid = tests.linked( data.val, linkedTo.val() );
+			}
+			/* validate by type of field. use 'attr()' is proffered to get the actual value and not what the browsers sees for unsupported types.
+			*/
+			//else if( data.valid || data.type == 'select' )
+
 			data.valid = testByType(data.type, data.val);
 
-		// optional fields are only gets validated if they are not empty
-		if( field.hasClass('optional') && !data.val )
-			data.valid = true;
-		
+			// optional fields are only validated if they are not empty
+			if( field.hasClass('optional') && !data.val )
+				data.valid = true;
+		}
+
 		// mark / unmark the field, and set the general 'submit' flag accordingly
 		if( data.valid )
 			unmark( field );
@@ -353,13 +344,15 @@ var validator = (function(){
 			mark( field, alertTxt );
 			submit = false;
 		}
-		
+
 		return data.valid;
 	}
-	
+
 	/* vaildates all the REQUIRED fields prior to submiting the form
 	*/
 	function checkAll( $form ){
+		$form = $($form);
+
 		if( $form.length == 0 ){
 			console.warn('element not found');
 			return false;
@@ -373,10 +366,10 @@ var validator = (function(){
 			// use an AND operation, so if any of the fields returns 'false' then the submitted result will be also FALSE
 			submit = submit * checkField.apply(this);
 		});
-		
+
 		return !!submit;  // casting the variable to make sure it's a boolean
 	}
-	
+
 	return {
 		defaults 	: defaults,
 		checkField 	: checkField,
@@ -387,4 +380,4 @@ var validator = (function(){
 		message		: message,
 		tests 		: tests
 	}
-})();
+})(jQuery);
