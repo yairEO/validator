@@ -86,6 +86,7 @@ var validator = (function($){
 				alertTxt = message.min;
 				return false;
 			}
+
 			// check if there is max length & field length is greater than the allowed
 			if( lengthRange && lengthRange[1] && a.length > lengthRange[1] ){
 				alertTxt = message.max;
@@ -120,7 +121,8 @@ var validator = (function($){
 						regex = pattern;
 				}
 				try{
-					jsRegex = new RegExp("^"+regex+"$").test(a);
+					jsRegex = new RegExp(regex).test(a);
+					console.log(a, regex);
 					if( a && !jsRegex )
 						return false;
 				}
@@ -252,7 +254,6 @@ var validator = (function($){
 	};
 
 	function testByType(type, value){
-
 		if( type == 'tel' )
 			pattern = pattern || 'phone';
 
@@ -291,7 +292,6 @@ var validator = (function($){
 		field.data( 'val', field[0].value.replace(/^\s+|\s+$/g, "") );	// cache the value of the field and trim it
 		data = field.data();
 
-
 		// Check if there is a specific error message for that field, if not, use the default 'invalid' message
 		alertTxt = message[field.prop('name')] || message.invalid;
 
@@ -329,7 +329,6 @@ var validator = (function($){
 			/* validate by type of field. use 'attr()' is proffered to get the actual value and not what the browsers sees for unsupported types.
 			*/
 			//else if( data.valid || data.type == 'select' )
-
 			data.valid = testByType(data.type, data.val);
 
 			// optional fields are only validated if they are not empty
