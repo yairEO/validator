@@ -30,6 +30,11 @@ var validator = (function($){
 		complete		: 'input is not complete',
 		select			: 'Please select an option'
 	};
+	
+	if(!window.console){
+		console={};
+		console.log=console.warn=function(){ return; }
+	}
 
 	// defaults
 	defaults = { alerts:true };
@@ -122,7 +127,6 @@ var validator = (function($){
 				}
 				try{
 					jsRegex = new RegExp(regex).test(a);
-					console.log(a, regex);
 					if( a && !jsRegex )
 						return false;
 				}
@@ -328,8 +332,8 @@ var validator = (function($){
 			}
 			/* validate by type of field. use 'attr()' is proffered to get the actual value and not what the browsers sees for unsupported types.
 			*/
-			//else if( data.valid || data.type == 'select' )
-			data.valid = testByType(data.type, data.val);
+			else if( data.valid || data.type == 'select' )
+				data.valid = testByType(data.type, data.val);
 
 			// optional fields are only validated if they are not empty
 			if( field.hasClass('optional') && !data.val )
