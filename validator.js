@@ -8,7 +8,7 @@
 
 var validator = (function($){
 	var message, tests, checkField, validate, mark, unmark, field, minmax, defaults,
-		validateWords, lengthRange, lengthLimit, pattern, alertTxt, data,
+		validateWords, lengthRange, lengthLimit, pattern, alertTxt, data, tmp_data_type,
 		email_illegalChars = /[\(\)\<\>\,\;\:\\\/\"\[\]]/,
 		email_filter = /^.+@.+\..{2,3}$/;
 
@@ -250,11 +250,12 @@ var validator = (function($){
 	*/
 	unmark = function( field ){
 		if( !field || !field.length ){
-			console.warn('no "field" argument, null or DOM object not found')
+			console.warn('no "field" argument, null or DOM object not found');
 			return false;
 		}
 
 		field.parents('.item').removeClass('bad')
+		 .find('.alert').remove();
 	};
 
 	function testByType(type, value){
@@ -271,8 +272,14 @@ var validator = (function($){
 		field = $(el);
 
 		field.data( 'valid', true );				// initialize validness of field by first checking if it's even filled out of now
-		field.data( 'type', field.attr('type') );	// every field starts as 'valid=true' until proven otherwise
-		pattern = el.pattern;
+		// every field starts as 'valid=true' until proven otherwise
+		
+        	pattern = el.pattern;
+		tmp_data_type = field.attr('type');
+		field.data('type', tmp_data_type == undefined ? 'text' : tmp_data_type);	
+		
+        	field.data('val', field[0].value.replace(/^\s+|\s+$/g, ""));	// cache the value of the field and trim it
+        	data = field.data();
 	}
 
 	/* Validations per-character keypress
@@ -292,10 +299,7 @@ var validator = (function($){
 			return true;
 
 		prepareFieldData(this);
-
-		field.data( 'val', field[0].value.replace(/^\s+|\s+$/g, "") );	// cache the value of the field and trim it
-		data = field.data();
-
+		
 		// Check if there is a specific error message for that field, if not, use the default 'invalid' message
 		alertTxt = message[field.prop('name')] || message.invalid;
 
