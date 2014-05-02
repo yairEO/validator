@@ -250,18 +250,20 @@ var validator = (function($){
 	*/
 	unmark = function( field ){
 		if( !field || !field.length ){
-			console.warn('no "field" argument, null or DOM object not found')
+			console.warn('no "field" argument, null or DOM object not found');
 			return false;
 		}
 
-		field.parents('.item').removeClass('bad')
+		field.parents('.item')
+			 .removeClass('bad')
+			 .find('.alert').remove();
 	};
 
 	function testByType(type, value){
 		if( type == 'tel' )
 			pattern = pattern || 'phone';
 
-		if( type == 'password' || type == 'tel' )
+		if( !type || type == 'password' || type == 'tel' )
 			type = 'text';
 
 		return tests[type](value);
