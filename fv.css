@@ -43,13 +43,13 @@ input, select{ font-size:inherit; margin:0; }
 input:focus, textarea:focus{ border-color:#AAA; }
 
 input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
-input[type=checkbox]{ border:none; bottom:-1px; cursor:pointer; margin:0 5px 0 0; position:relative; }
+input[type=checkbox]{ width:auto; border:none; bottom:-1px; cursor:pointer; margin:0 5px 0 0; position:relative; }
 button[type=submit]{ font-size:1.1em; padding:5px 25px; }
 
 /* Tooltips helpers */
 .item .tooltip{ float:left; top:2px; left:7px; position:relative; z-index:2; }
 .item .tooltip:hover{ z-index:3; }
-   .item .tooltip > span{ display:inline-block; width:16px; height:16px; line-height:16px; font-size:0.9em; font-weight:bold; text-align:center; color:#FFF; cursor:help; background-color:#00AEEF; position:relative; border-radius:10px; }
+   .item .tooltip > span{ display:inline-block; width:15px; height:15px; line-height:15px; font-size:0.9em; font-weight:bold; text-align:center; color:#FFF; cursor:help; background-color:#00AEEF; position:relative; border-radius:10px; }
     .item .tooltip .content{ opacity:0; width:200px; background-color:#333; color:#FFF; font-size:0.9em; position:absolute; top:0; left:20px; padding:8px; border-radius:6px; pointer-events:none; transition:0.2s cubic-bezier(0.1, 0.1, 0.25, 2); -webkit-transition:0.3s cubic-bezier(0.1, 0.2, 0.5, 2.2); -moz-transition:0.3s cubic-bezier(0.1, 0.2, 0.5, 2.2); }
         .item .tooltip p{ padding:0; }
    .item .tooltip.down .content{ left:auto; right:0; top:30px; }
@@ -79,10 +79,13 @@ button[type=submit]{ font-size:1.1em; padding:5px 25px; }
 form fieldset{ clear:both; margin:0 0 10px 0; }
 form .item{ padding:5px 0; position:relative; height:2em; }
 form .item.items{ height:auto; }
-	.item label{ float:left; }
-		.item label span{ float:left; width:160px; text-transform:capitalize; line-height:2em; }
+	.item label, .item .label{ float:left; cursor:pointer; }
+		.item label span, .item .label{ float:left; width:160px; text-transform:capitalize; line-height:2em; }
 	.item input, .item textarea{ float:left; padding:3px 4px; width:210px; -webkit-transition:0.2s; -moz-transition:0.2s; transition:0.2s; }
-	.item input{  }
+	.item input[type=checkbox]{ width:auto; }
+	
+	.label ~ label{ vertical-align:middle; margin:0.3em 1.2em 0 0; } 
+	
 	.item input.short{ width:90px; }
 	.item input:focus:not([type="checkbox"]), .item textarea:focus{ box-shadow:0 0 4px #00AEEF; border:1px solid #00AEEF; }
 	.item textarea{  }
