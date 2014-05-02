@@ -232,16 +232,20 @@ var validator = (function($){
 		// if already is marked as 'bad', then make sure the text is set again because i might change depending on validation
 		var item = field.parents('.item'),
 			warning;
+			
+		if( item.hasClass('bad') ){
+			if( defaults.alerts )
+				item.find('.alert').html(text);
+		}
 
-        item.removeClass('bad')
-        	.find('.alert').remove();
 
-        if( defaults.alerts ){
-            warning = $('<div class="alert">').text( text );
+        else if( defaults.alerts ){
+            warning = $('<div class="alert">').html( text );
             item.append( warning );
         }
 		
-		// a deltay so the "alert" could be transitioned via CSS
+        item.removeClass('bad');
+		// a delay so the "alert" could be transitioned via CSS
         setTimeout(function(){
             item.addClass('bad');
         }, 0);
