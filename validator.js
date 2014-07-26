@@ -276,9 +276,9 @@ var validator = (function($){
 	function prepareFieldData(el){
 		field = $(el);
 
-		field.data( 'valid', true );				// initialize validness of field by first checking if it's even filled out of now
+		field.data( 'valid', true );				// initialize validity of field
 		field.data( 'type', field.attr('type') );	// every field starts as 'valid=true' until proven otherwise
-		pattern = el.pattern;
+		pattern = field.attr('pattern');
 	}
 
 	/* Validations per-character keypress
@@ -287,7 +287,7 @@ var validator = (function($){
 		prepareFieldData(this);
 
 		if( e.charCode )
-			return testByType( data.type, String.fromCharCode(e.charCode) );
+			return testByType( this.type, String.fromCharCode(e.charCode) );
 	}
 
 	/* Checks a single form field by it's type and specific (custom) attributes
