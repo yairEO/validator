@@ -30,7 +30,7 @@ var validator = (function($){
 		complete		: 'input is not complete',
 		select			: 'Please select an option'
 	};
-	
+
 	if(!window.console){
 		console={};
 		console.log=console.warn=function(){ return; }
@@ -232,7 +232,7 @@ var validator = (function($){
 		// if already is marked as 'bad', then make sure the text is set again because i might change depending on validation
 		var item = field.parents('.item'),
 			warning;
-			
+
 		if( item.hasClass('bad') ){
 			if( defaults.alerts )
 				item.find('.alert').html(text);
@@ -243,7 +243,7 @@ var validator = (function($){
             warning = $('<div class="alert">').html( text );
             item.append( warning );
         }
-		
+
         item.removeClass('bad');
 		// a delay so the "alert" could be transitioned via CSS
         setTimeout(function(){
@@ -267,10 +267,10 @@ var validator = (function($){
 		if( type == 'tel' )
 			pattern = pattern || 'phone';
 
-		if( !type || type == 'password' || type == 'tel' )
+		if( !type || type == 'password' || type == 'tel' || type == 'search' || type == 'file' )
 			type = 'text';
 
-		return tests[type](value);
+		return tests[type] ? tests[type](value) : true;
 	}
 
 	function prepareFieldData(el){

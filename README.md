@@ -26,6 +26,8 @@ These input types can be validated by the the JS for – `<input type='foo' name
 * Number
 * Date
 * URL
+* Search
+* File
 * Tel
 * Hidden – Hidden fields can also have the ‘required’ attribute
 
@@ -41,7 +43,7 @@ The below form elements are also supported:
     		<div class="item">
     			<label>
     				<span>Name</span>
-    				<input data-validate-lengthRange="6" data-validate-words="2" name="name" placeholder="ex. John f. Kennedy" required="required" type="text" />		
+    				<input data-validate-lengthRange="6" data-validate-words="2" name="name" placeholder="ex. John f. Kennedy" required="required" type="text" />
     			</label>
     			<div class='tooltip help'>
     				<span>?</span>
@@ -57,7 +59,7 @@ The below form elements are also supported:
     				<input name="email" required="required" type="email" />
     			</label>
     		</div>
-         		... 
+         		...
 
 
 ### Explaining the DOM
@@ -66,16 +68,16 @@ Next, inside an item, there will typically be an input or select or something of
 
 The whole approach here is to define each form field (input, select, whatever) as much as possible with HTML5 attributes and also with custom attributes.
 
-| Attribute                  | Purpose                                                                                                                                                                                                                                                                                                   |
-|----------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|                                                                                                                                     |
-| required                   | Defines that this field should be validated (with JS by my implementation and not via native HTML5 browser defaults)                                                                                                                                                                                      |
-| placeholder                | Writes some placeholder text which usually describes the fields with some example input (not supported in IE8 and below)                                                                                                                                                                                  |
-| data-validate-words        | Defines the minimum amount of words for this field                                                                                                                                                                                                                                                        |
-| data-validate-length       | Defines the length allowed for the field (after trim). Example value: `7,11` (field can only have 7 or 11 characters). you can add how many allowed lengths you wish                                                                                                                                      |
-| data-validate-length-range | Defines the minimum and/or maximum number of chars in the field (after trim). value can be `4,8` for example, or just `4` to set minimum chars only                                                                                                                                                       |
-| data-validate-linked       | Defines the field which the current field’s value (the attribute is set on) should be compared to                                                                                                                                                                                                         |
-| data-validate-minmax       | For type `number` only. Defines the minimum and/or maximum value that can be in that field                                                                                                                                                                                                                |
-| data-validate-pattern      | Defines a pattern which the field is evaluated with. Available values are:<br>**numeric** - Allow only numbers<br>**alphanumeric** - Allow only numbers or letters. No special language characters<br>**phone** - Allow only numbers, spaces or dashes.<br><br>Alternatively, you may write your own custom regex here as well. |                                                                          |
+| Attribute                  | Purpose                                                                                                                                                                                                                                                                                                                         |
+|----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| required                   | Defines that this field should be validated (with JS by my implementation and not via native HTML5 browser defaults)                                                                                                                                                                                                            |
+| placeholder                | Writes some placeholder text which usually describes the fields with some example input (not supported in IE8 and below)                                                                                                                                                                                                        |
+| pattern                    | Defines a pattern which the field is evaluated with. Available values are:<br>**numeric** - Allow only numbers<br>**alphanumeric** - Allow only numbers or letters. No special language characters<br>**phone** - Allow only numbers, spaces or dashes.<br><br>Alternatively, you may write your own custom regex here as well. |
+| data-validate-words        | Defines the minimum amount of words for this field                                                                                                                                                                                                                                                                              |
+| data-validate-length       | Defines the length allowed for the field (after trim). Example value: `7,11` (field can only have 7 or 11 characters). you can add how many allowed lengths you wish                                                                                                                                                            |
+| data-validate-length-range | Defines the minimum and/or maximum number of chars in the field (after trim). value can be `4,8` for example, or just `4` to set minimum chars only                                                                                                                                                                             |
+| data-validate-linked       | Defines the field which the current field’s value (the attribute is set on) should be compared to                                                                                                                                                                                                                               |
+| data-validate-minmax       | For type `number` only. Defines the minimum and/or maximum value that can be in that field                                                                                                                                                                                                                                      |
 
 
 
@@ -104,11 +106,11 @@ The validator function holds a messages object called "message", which itself ho
     	complete		: 'input is not complete',
     	select			: 'Please select an option'
     };
-    
+
 This object can be extended easily. The idea is to extend it with new keys which represent the name of the field you want the message to be linked to, and that custom message appear as the `general error` one. Default messages can be over-ride.
 Example: for a given type ‘date’ field, lets set a custom (general error) message like so:
     `validator.message['date'] = 'not a real date';`
-    
+
 Error messages can be disabled:
     `validator.defaults.alerts = false;`
 
@@ -124,18 +126,18 @@ A generic callback function using jQuery to have the form validated on the **Sub
     	e.preventDefault();
     	var submit = true;
     	// you can put your own custom validations below
-    	
-    	// check all the rerquired fields 
+
+    	// check all the rerquired fields
     	if( !validator.checkAll( $(this) ) )
     		submit = false;
-    
+
     	if( submit )
     		this.submit();
-    		
+
     	return false;
     })
 ###Usage example - validate on field blur event (out of focus)
-Check every field once it looses focus (onBlur) event 
+Check every field once it looses focus (onBlur) event
 
     $('form').on('blur', 'input[required]', validator.checkField);
 

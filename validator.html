@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Total Form Validation</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
 	<link rel="stylesheet" href="fv.css" type="text/css" />
 	<!--[if IE]>
 	<style>
@@ -32,7 +33,7 @@
 					<div class="item">
 						<label>
 							<span>Name</span>
-							<input data-validate-length-range="6" data-validate-words="2" pattern='alphanumeric' name="name" placeholder="ex. John f. Kennedy" required="required" />		
+							<input data-validate-length-range="6" data-validate-words="2" pattern='alphanumeric' name="name" placeholder="ex. John f. Kennedy" required="required" />
 						</label>
 						<div class='tooltip help'>
 							<span>?</span>
@@ -156,7 +157,7 @@
 							<input name="url" placeholder="http://www.website.com" required="required" type="url" />
 						</label>
 					</div>
-					
+
 					<div class="item multi required">
 						<label for='multi_first'>
 							<span>Multifield</span>
@@ -180,6 +181,12 @@
 					</div>
 					<div class="item">
 						<label>
+							<span>File upload</span>
+							<input type='file' required>
+						</label>
+					</div>
+					<div class="item">
+						<label>
 							<span>message</span>
 							<textarea required="required" name='message'></textarea>
 						</label>
@@ -190,7 +197,7 @@
 					<input name="somethingHidden" required="required" type="text" style='display:none' />
 				</fieldset>
 				<button id='send' type='submit'>Submit</button>
-			</form>	
+			</form>
 		</section>
 	</div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -199,21 +206,21 @@
 	<script>
 		// initialize the validator function
 		validator.message['date'] = 'not a real date';
-		
+
 		// validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
 		$('form')
 			.on('blur', 'input[required], input.optional, select.required', validator.checkField)
 			.on('change', 'select.required', validator.checkField)
 			.on('keypress', 'input[required][pattern]', validator.keypress);
-			
+
 		$('.multi.required')
-			.on('keyup blur', 'input', function(){ 
+			.on('keyup blur', 'input', function(){
 				validator.checkField.apply( $(this).siblings().last()[0] );
 			});
-		
+
 		// bind the validation to the form submit event
 		//$('#send').click('submit');//.prop('disabled', true);
-		
+
 		$('form').submit(function(e){
 			e.preventDefault();
 			var submit = true;
@@ -226,12 +233,12 @@
 				this.submit();
 			return false;
 		});
-		
+
 		/* FOR DEMO ONLY */
 		$('#vfields').change(function(){
 			$('form').toggleClass('mode2');
 		}).prop('checked',false);
-		
+
 		$('#alerts').change(function(){
 			validator.defaults.alerts = (this.checked) ? false : true;
 			if( this.checked )
