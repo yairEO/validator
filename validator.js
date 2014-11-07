@@ -37,7 +37,15 @@ var validator = (function($){
 	}
 
 	// defaults
-	defaults = { alerts:true };
+	defaults = {
+		alerts: true,
+		classes: {
+			item: 'item',
+			alert: 'alert',
+			bad: 'bad',
+			good: 'good'
+		}
+	};
 
 	/* Tests for each type of field (including Select element)
 	*/
@@ -224,31 +232,31 @@ var validator = (function($){
 
 	/* marks invalid fields
 	*/
-    mark = function( field, text ){
+	mark = function( field, text ){
 		if( !text || !field || !field.length )
 			return false;
 
 		// check if not already marked as a 'bad' record and add the 'alert' object.
 		// if already is marked as 'bad', then make sure the text is set again because i might change depending on validation
-		var item = field.parents('.item'),
+		var item = field.parents('.' + defaults.classes.item),
 			warning;
 
-		if( item.hasClass('bad') ){
+		if( item.hasClass(defaults.classes.bad) ){
 			if( defaults.alerts )
-				item.find('.alert').html(text);
+				item.find('.'+defaults.classes.alert).html(text);
 		}
 
 
-        else if( defaults.alerts ){
-            warning = $('<div class="alert">').html( text );
-            item.append( warning );
-        }
+		else if( defaults.alerts ){
+			warning = $('<div class="'+ defaults.classes.alert +'">').html( text );
+			item.append( warning );
+		}
 
-        item.removeClass('bad');
+		item.removeClass(defaults.classes.bad);
 		// a delay so the "alert" could be transitioned via CSS
-        setTimeout(function(){
-            item.addClass('bad');
-        }, 0);
+		setTimeout(function(){
+			item.addClass(defaults.classes.bad);
+		}, 0);
 	};
 	/* un-marks invalid fields
 	*/
@@ -258,9 +266,9 @@ var validator = (function($){
 			return false;
 		}
 
-		field.parents('.item')
-			 .removeClass('bad')
-			 .find('.alert').remove();
+		field.parents('.' + defaults.classes.item)
+			 .removeClass(defaults.classes.bad)
+			 .find('.'+ defaults.classes.alert).remove();
 	};
 
 	function testByType(type, value){

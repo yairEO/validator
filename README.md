@@ -78,9 +78,11 @@ The whole approach here is to define each form field (input, select, whatever) a
 | data-validate-length-range | Defines the minimum and/or maximum number of chars in the field (after trim). value can be `4,8` for example, or just `4` to set minimum chars only                                                                                                                                                                             |
 | data-validate-linked       | Defines the field which the current field’s value (the attribute is set on) should be compared to                                                                                                                                                                                                                               |
 | data-validate-minmax       | For type `number` only. Defines the minimum and/or maximum value that can be in that field                                                                                                                                                                                                                                      |
+The `.item` class can be overridden:
 
-
-
+~~~js
+    validator.defaults.classes.item = '.your-class';
+~~~
 
 ### Optional fields
 There is also support for optional fields, which are not validated, unless they have a value. The support for this feature is done by adding a class “optional” to a form element. Note that this should not be done along side the “required” attribute.
