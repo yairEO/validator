@@ -136,6 +136,7 @@ A generic callback function using jQuery to have the form validated on the **Sub
 
     	return false;
     })
+
 ###Usage example - validate on field blur event (out of focus)
 Check every field once it looses focus (onBlur) event
 
@@ -145,6 +146,12 @@ Check every field once it looses focus (onBlur) event
 
 The helper tooltips **&lt;div class='tooltip help'&gt;**, which work using pure CSS, are element which holds a small **'?'** icon and when hovered over with the mouse, reveals a text explaining what the field “item” is about or for example, what the allowed input format is.
 
+## Classes
+`validator.defaults.classes` object can be modified with these classes:
+
+    item    : 'item',  // class for each input wrapper
+    alert   : 'alert', // call on the alert tooltip
+    bad     : 'bad'    // classes for bad input
 
 ## Bonos – multifields
 
