@@ -327,6 +327,10 @@ var validator = (function($){
         minmax          = data['validateMinmax'] ? (data['validateMinmax']+'').split(',') : ''; // for type 'number', defines the minimum and/or maximum for the value as a number.
 
         data.valid = tests.hasValue(data.val);
+
+        if( field.hasClass('optional') && !data.valid )
+            data.valid = true;
+
         // check if field has any value
         if( data.valid ){
             /* Validate the field's value is different than the placeholder attribute (and attribute exists)
@@ -348,9 +352,6 @@ var validator = (function($){
             else if( data.valid || data.type == 'select' )
                 data.valid = testByType(data.type, data.val);
 
-            // optional fields are only validated if they are not empty
-            if( field.hasClass('optional') && !data.val )
-                data.valid = true;
         }
 
         // mark / unmark the field, and set the general 'submit' flag accordingly
