@@ -326,7 +326,9 @@ var validator = (function($){
         lengthLimit     = data['validateLength'] ? (data['validateLength']+'').split(',') : false;
         minmax          = data['validateMinmax'] ? (data['validateMinmax']+'').split(',') : ''; // for type 'number', defines the minimum and/or maximum for the value as a number.
 
-        data.valid = tests.hasValue(data.val);
+        // Prevents non-required fields from being tested for having a value present
+        data.valid = $(this).attr('required') ? tests.hasValue(data.val) : true;
+
         // check if field has any value
         if( data.valid ){
             /* Validate the field's value is different than the placeholder attribute (and attribute exists)
