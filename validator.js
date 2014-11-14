@@ -75,7 +75,8 @@ var validator = (function($){
             }
             return true;
         },
-        text : function(a){
+        // a "skip" will skip some of the tests (needed for keydown validation)
+        text : function(a, skip){
             // make sure there are at least X number of words, each at least 2 chars long.
             // for example 'john F kenedy' should be at least 2 words and will pass validation
             if( validateWords ){
@@ -94,7 +95,7 @@ var validator = (function($){
                 }
                 return true;
             }
-            if( lengthRange && a.length < lengthRange[0] ){
+            if( !skip && lengthRange && a.length < lengthRange[0] ){
                 alertTxt = message.min;
                 return false;
             }
@@ -104,16 +105,14 @@ var validator = (function($){
                 alertTxt = message.max;
                 return false;
             }
+
             // check if the field's value should obey any length limits, and if so, make sure the length of the value is as specified
             if( lengthLimit && lengthLimit.length ){
-                var obeyLimit = false;
                 while( lengthLimit.length ){
-                    if( lengthLimit.pop() == a.length )
-                        obeyLimit = true;
-                }
-                if( !obeyLimit ){
-                    alertTxt = message.complete;
-                    return false;
+                    if( lengthLimit.pop() == a.length ){
+                        alertTxt = message.complete;
+                        return false;
+                    }
                 }
             }
 
@@ -142,6 +141,7 @@ var validator = (function($){
                     return false;
                 }
             }
+
             return true;
         },
         number : function(a){
@@ -198,7 +198,6 @@ var validator = (function($){
                 return /^(https?:\/\/)?([\w\d\-_]+\.+[A-Za-z]{2,})+\/?/.test( url );
             }
             if( !testUrl( a ) ){
-                console.log(a);
                 alertTxt = a ? message.url : message.empty;
                 return false;
             }
@@ -277,7 +276,8 @@ var validator = (function($){
         if( !type || type == 'password' || type == 'tel' || type == 'search' || type == 'file' )
             type = 'text';
 
-        return tests[type] ? tests[type](value) : true;
+
+        return tests[type] ? tests[type](value, true) : true;
     }
 
     function prepareFieldData(el){
@@ -292,9 +292,11 @@ var validator = (function($){
     */
     function keypress(e){
         prepareFieldData(this);
+        //  String.fromCharCode(e.charCode)
 
-        if( e.charCode )
-            return testByType( this.type, String.fromCharCode(e.charCode) );
+        if( e.charCode ){
+            return testByType( this.type, this.value );
+        }
     }
 
     /* Checks a single form field by it's type and specific (custom) attributes
