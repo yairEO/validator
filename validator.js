@@ -10,7 +10,7 @@ var validator = (function($){
     var message, tests, checkField, validate, mark, unmark, field, minmax, defaults,
         validateWords, lengthRange, lengthLimit, pattern, alertTxt, data,
         email_illegalChars = /[\(\)\<\>\,\;\:\\\/\"\[\]]/,
-        email_filter = /^.+@.+\..{2,3}$/;
+        email_filter = /^.+@.+\..{2,6}$/;  // exmaple email "steve@s-i.photo"
 
     /* general text messages
     */

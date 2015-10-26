@@ -4,7 +4,7 @@ The javascript validation code is based on jQuery. The Validator is cross-browse
 
 In the semantic point-of-view, I believe that this method is very clean and…appropriate. This is how forms should be, IMHO.
 
-[DEMO PAGE](http://dropthebit.com/demos/validator/validator.html)
+[DEMO PAGE](http://yaireo.github.io/validator)
 
 ### Why should you use this?
 
