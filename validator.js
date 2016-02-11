@@ -122,6 +122,9 @@ var validator = (function($){
                     case 'alphanumeric' :
                         regex = /^[a-z0-9]+$/i;
                         break;
+                    case 'alphanumeric-including-uppercase' :
+                        regex = /^[a-zA-Z0-9]+$/i;
+                        break;
                     case 'numeric' :
                         regex = /^[0-9]+$/i;
                         break;
