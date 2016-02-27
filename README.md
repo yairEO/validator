@@ -29,6 +29,7 @@ These input types can be validated by the the JS for – `<input type='foo' name
 * Search
 * File
 * Tel
+* Checkbox
 * Hidden – Hidden fields can also have the ‘required’ attribute
 
 The below form elements are also supported:
