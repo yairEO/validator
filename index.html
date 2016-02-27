@@ -158,6 +158,13 @@
 						</label>
 					</div>
 
+					<div class="item">
+						<label>
+							<span>Checkboxes</span>
+							<label><input required="required" type="checkbox" />I agree</label>
+						</label>
+					</div>
+
 					<div class="item multi required">
 						<label for='multi_first'>
 							<span>Multifield</span>
@@ -224,13 +231,15 @@
 		$('form').submit(function(e){
 			e.preventDefault();
 			var submit = true;
-			// evaluate the form using generic validaing
+
+			// Validate the form using generic validaing
 			if( !validator.checkAll( $(this) ) ){
 				submit = false;
 			}
 
 			if( submit )
 				this.submit();
+
 			return false;
 		});
 
