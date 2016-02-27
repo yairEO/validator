@@ -120,7 +120,7 @@ var validator = (function($){
                 var regex, jsRegex;
                 switch( pattern ){
                     case 'alphanumeric' :
-                        regex = /^[a-z0-9]+$/i;
+                        regex = /^[a-zA-Z0-9]+$/i;
                         break;
                     case 'numeric' :
                         regex = /^[0-9]+$/i;
