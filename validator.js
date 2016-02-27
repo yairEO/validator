@@ -16,6 +16,7 @@ var validator = (function($){
     */
     message = {
         invalid         : 'invalid input',
+        checked         : 'must be checked',
         empty           : 'please put something here',
         min             : 'input is too short',
         max             : 'input is too long',
@@ -314,11 +315,11 @@ var validator = (function($){
         // Check if there is a specific error message for that field, if not, use the default 'invalid' message
         alertTxt = message[field.prop('name')] || message.invalid;
 
-        // SELECT / TEXTAREA nodes needs special treatment
+        // Special treatment
         if( field[0].nodeName.toLowerCase() === "select" ){
             data.type = 'select';
         }
-        if( field[0].nodeName.toLowerCase() === "textarea" ){
+        else if( field[0].nodeName.toLowerCase() === "textarea" ){
             data.type = 'text';
         }
         /* Gather Custom data attributes for specific validation:
@@ -333,8 +334,15 @@ var validator = (function($){
         if( field.hasClass('optional') && !data.valid )
             data.valid = true;
 
+
+        // for checkboxes
+        if( field[0].type === "checkbox" ){
+            data.valid = field[0].checked;
+            alertTxt = message.checked;
+        }
+
         // check if field has any value
-        if( data.valid ){
+        else if( data.valid ){
             /* Validate the field's value is different than the placeholder attribute (and attribute exists)
             * this is needed when fixing the placeholders for older browsers which does not support them.
             * in this case, make sure the "placeholder" jQuery plugin was even used before proceeding
@@ -379,6 +387,7 @@ var validator = (function($){
 
         var that = this,
             submit = true, // save the scope
+            // get all the input/textareas/select fields which are required or optional (meaning, they need validation only if they were filled)
             fieldsToCheck = $form.find(':input').filter('[required=required], .required, .optional').not('[disabled=disabled]');
 
         fieldsToCheck.each(function(){
