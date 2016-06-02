@@ -362,12 +362,12 @@ var validator = (function($){
                 else
                     linkedTo = $(':input[name=' + data['validateLinked'] + ']');
 
-                data.valid = tests.linked( data.val, linkedTo.val() );
+                data.valid = data.valid * tests.linked( data.val, linkedTo.val() );
             }
             /* validate by type of field. use 'attr()' is proffered to get the actual value and not what the browsers sees for unsupported types.
             */
             //else if( data.valid || data.type == 'select' )
-            data.valid = testByType(data.type, data.val);
+            data.valid = data.valid * testByType(data.type, data.val);
 
         }
 
