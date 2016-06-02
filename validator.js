@@ -27,21 +27,17 @@ var validator = (function($){
         email           : 'email address is invalid',
         email_repeat    : 'emails do not match',
         password_repeat : 'passwords do not match',
-        repeat          : 'no match',
+        no_match        : 'no match',
         complete        : 'input is not complete',
         select          : 'Please select an option'
     };
 
-    if(!window.console){
-        console={};
-        console.log=console.warn=function(){ return; }
-    }
 
     // defaults
     defaults = {
         alerts  : true,
         classes : {
-	        item    : 'item',
+	        item    : 'field',
 	        alert   : 'alert',
 	        bad     : 'bad'
         }
@@ -51,7 +47,7 @@ var validator = (function($){
     */
     tests = {
         sameAsPlaceholder : function(a){
-            return $.fn.placeholder && a.attr('placeholder') !== undefined && data.val == a.prop('placeholder');
+            return a.attr('placeholder') !== undefined && data.val == a.prop('placeholder');
         },
         hasValue : function(a){
             if( !a ){
@@ -77,12 +73,12 @@ var validator = (function($){
             return true;
         },
         // a "skip" will skip some of the tests (needed for keydown validation)
-        text : function(a, skip){
+        text : function(a){
             // make sure there are at least X number of words, each at least 2 chars long.
             // for example 'john F kenedy' should be at least 2 words and will pass validation
             if( validateWords ){
                 var words = a.split(' ');
-                // iterrate on all the words
+                // iterate on all the words
                 var wordsLength = function(len){
                     for( var w = words.length; w--; )
                         if( words[w].length < len )
@@ -96,7 +92,8 @@ var validator = (function($){
                 }
                 return true;
             }
-            if( !skip && lengthRange && a.length < lengthRange[0] ){
+			
+            if( lengthRange && a.length < lengthRange[0] ){
                 alertTxt = message.min;
                 return false;
             }
@@ -111,12 +108,14 @@ var validator = (function($){
             if( lengthLimit && lengthLimit.length ){
                 while( lengthLimit.length ){
                     if( lengthLimit.pop() == a.length ){
-                        alertTxt = message.complete;
-                        return false;
+                        return true;
                     }
                 }
+				
+				alertTxt = message.complete;
+                return false;
             }
-
+			
             if( pattern ){
                 var regex, jsRegex;
                 switch( pattern ){
@@ -134,11 +133,14 @@ var validator = (function($){
                 }
                 try{
                     jsRegex = new RegExp(regex).test(a);
-                    if( a && !jsRegex )
+                    if( a && !jsRegex ){
+                        alertTxt = message.invalid;
                         return false;
+                    }
                 }
                 catch(err){
                     console.log(err, field, 'regex is invalid');
+                    alertTxt = message.invalid;
                     return false;
                 }
             }
@@ -277,7 +279,6 @@ var validator = (function($){
         if( !type || type == 'password' || type == 'tel' || type == 'search' || type == 'file' )
             type = 'text';
 
-
         return tests[type] ? tests[type](value, true) : true;
     }
 
@@ -307,13 +308,16 @@ var validator = (function($){
         if( this.type !='hidden' && $(this).is(':hidden') )
             return true;
 
+        alertTxt = '';
+
         prepareFieldData(this);
+
+        var linkedTo,
+            form = field.closest('form'); // if the field is part of a form, then cache it
+
 
         field.data( 'val', field[0].value.replace(/^\s+|\s+$/g, "") );  // cache the value of the field and trim it
         data = field.data();
-
-        // Check if there is a specific error message for that field, if not, use the default 'invalid' message
-        alertTxt = message[field.prop('name')] || message.invalid;
 
         // Special treatment
         if( field[0].nodeName.toLowerCase() === "select" ){
@@ -322,6 +326,7 @@ var validator = (function($){
         else if( field[0].nodeName.toLowerCase() === "textarea" ){
             data.type = 'text';
         }
+		
         /* Gather Custom data attributes for specific validation:
         */
         validateWords   = data['validateWords'] || 0;
@@ -329,11 +334,7 @@ var validator = (function($){
         lengthLimit     = data['validateLength'] ? (data['validateLength']+'').split(',') : false;
         minmax          = data['validateMinmax'] ? (data['validateMinmax']+'').split(',') : ''; // for type 'number', defines the minimum and/or maximum for the value as a number.
 
-        data.valid = tests.hasValue(data.val);
-
-        if( field.hasClass('optional') && !data.valid )
-            data.valid = true;
-
+        data.valid = field.hasClass('optional') || tests.hasValue(data.val);
 
         // for checkboxes
         if( field[0].type === "checkbox" ){
@@ -344,8 +345,8 @@ var validator = (function($){
         // check if field has any value
         else if( data.valid ){
             /* Validate the field's value is different than the placeholder attribute (and attribute exists)
-            * this is needed when fixing the placeholders for older browsers which does not support them.
-            * in this case, make sure the "placeholder" jQuery plugin was even used before proceeding
+            *  this is needed when fixing the placeholders for older browsers which does not support them.
+            *  in this case, make sure the "placeholder" jQuery plugin was even used before proceeding
             */
             if( tests.sameAsPlaceholder(field) ){
                 alertTxt = message.empty;
@@ -354,13 +355,19 @@ var validator = (function($){
 
             // if this field is linked to another field (their values should be the same)
             if( data.validateLinked ){
-                var linkedTo = data['validateLinked'].indexOf('#') == 0 ? $(data['validateLinked']) : $(':input[name=' + data['validateLinked'] + ']');
+                if( data['validateLinked'].indexOf('#') == 0 )
+                    linkedTo = $(data['validateLinked'])
+                else if( form.length )
+                    linkedTo = form.find(':input[name=' + data['validateLinked'] + ']');
+                else
+                    linkedTo = $(':input[name=' + data['validateLinked'] + ']');
+
                 data.valid = tests.linked( data.val, linkedTo.val() );
             }
             /* validate by type of field. use 'attr()' is proffered to get the actual value and not what the browsers sees for unsupported types.
             */
-            else if( data.valid || data.type == 'select' )
-                data.valid = testByType(data.type, data.val);
+            //else if( data.valid || data.type == 'select' )
+            data.valid = testByType(data.type, data.val);
 
         }
 
@@ -386,16 +393,27 @@ var validator = (function($){
         }
 
         var that = this,
-            submit = true, // save the scope
+            result = {
+                valid  : true,
+                fields : []
+            },
+            validField,
             // get all the input/textareas/select fields which are required or optional (meaning, they need validation only if they were filled)
             fieldsToCheck = $form.find(':input').filter('[required=required], .required, .optional').not('[disabled=disabled]');
 
         fieldsToCheck.each(function(){
+            validField =checkField.apply(this);
             // use an AND operation, so if any of the fields returns 'false' then the submitted result will be also FALSE
-            submit = submit * checkField.apply(this);
+            result.valid = result.valid * validField;
+
+            result.fields.push({
+                field   : this,
+                error   : alertTxt,
+                valid   : validField
+            })
         });
 
-        return !!submit;  // casting the variable to make sure it's a boolean
+        return result;
     }
 
     return {
