@@ -41,7 +41,7 @@ The below form elements are also supported:
 ## Basic semantics
     <form action="" method="post" novalidate>
     	<fieldset>
-    		<div class="item">
+    		<div class="field">
     			<label>
     				<span>Name</span>
     				<input data-validate-lengthRange="6" data-validate-words="2" name="name" placeholder="ex. John f. Kennedy" required="required" type="text" />
@@ -54,7 +54,7 @@ The below form elements are also supported:
     				</div>
     			</div>
     		</div>
-    		<div class="item">
+    		<div class="field">
     			<label>
     				<span>email</span>
     				<input name="email" required="required" type="email" />
@@ -64,8 +64,8 @@ The below form elements are also supported:
 
 
 ### Explaining the DOM
-First, obviously, there is a Form element with the novalidate attribute to make sure to disable the native HTML5 validations (which currently suck). proceeding it there is a Fieldset element which is not a must, but acts as a “binding” box for a group of fields that are under the same “category”. For bigger forms there are many times field groups that are visually separated from each other for example. Now, we treat every form field element the user interacts with, whatsoever, as an “item”, and therefor these “items” will be wraped with `<div class='item'>`. This isolation gives great powers.
-Next, inside an item, there will typically be an input or select or something of the sort, so they are put inside a `<label>` element, to get rid of the (annoying) for attribute, on the label (which also require us to give an ID to the form field element), and now when a user clicks on the label, the field will get focused. great. Going back to the label’s text itself, we wrap it with a `<span>` to have control over it’s style.
+First, obviously, there is a Form element with the novalidate attribute to make sure to disable the native HTML5 validations (which currently suck). proceeding it there is a Fieldset element which is not a must, but acts as a “binding” box for a group of fields that are under the same “category”. For bigger forms there are many times field groups that are visually separated from each other for example. Now, we treat every form field element the user interacts with, whatsoever, as an “field”, and therefor these “fields” will be wraped with `<div class='field'>`. This isolation gives great powers.
+Next, inside an field, there will typically be an input or select or something of the sort, so they are put inside a `<label>` element, to get rid of the (annoying) for attribute, on the label (which also require us to give an ID to the form field element), and now when a user clicks on the label, the field will get focused. great. Going back to the label’s text itself, we wrap it with a `<span>` to have control over it’s style.
 
 The whole approach here is to define each form field (input, select, whatever) as much as possible with HTML5 attributes and also with custom attributes.
 
@@ -103,7 +103,7 @@ The validator function holds a messages object called "message", which itself ho
     	email			: 'email address is invalid',
     	email_repeat	: 'emails do not match',
     	password_repeat	: 'passwords do not match',
-    	repeat			: 'no match',
+    	no_match	    : 'no match',
     	complete		: 'input is not complete',
     	select			: 'Please select an option'
     };
@@ -128,11 +128,8 @@ A generic callback function using jQuery to have the form validated on the **Sub
     	var submit = true;
     	// you can put your own custom validations below
 
-    	// check all the rerquired fields
-    	if( !validator.checkAll( $(this) ) )
-    		submit = false;
-
-    	if( submit )
+    	// check all the required fields
+    	if( validator.checkAll( $(this) ) )
     		this.submit();
 
     	return false;
@@ -145,15 +142,15 @@ Check every field once it looses focus (onBlur) event
 
 ## Tooltips
 
-The helper tooltips **&lt;div class='tooltip help'&gt;**, which work using pure CSS, are element which holds a small **'?'** icon and when hovered over with the mouse, reveals a text explaining what the field “item” is about or for example, what the allowed input format is.
+The helper tooltips **&lt;div class='tooltip help'&gt;**, which work using pure CSS, are element which holds a small **'?'** icon and when hovered over with the mouse, reveals a text explaining what the field “field” is about or for example, what the allowed input format is.
 
 ## Classes
 `validator.defaults.classes` object can be modified with these classes:
 
-    item    : 'item',  // class for each input wrapper
+    field   : 'field', // class for each input wrapper
     alert   : 'alert', // call on the alert tooltip
     bad     : 'bad'    // classes for bad input
 
-## Bonos – multifields
+## Bonus – multifields
 
 I have a cool feature I wrote which I call “multifields”. These are fields which are often use as to input a credit card or a serial number, and are actually a bunch of input fields which are “connected” to each other, and treated as one. You can see it in the demo page, and it’s included in ‘multifield.js’ file.
