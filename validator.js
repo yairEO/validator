@@ -242,7 +242,7 @@ var validator = (function($){
         var item = field.closest('.' + defaults.classes.item),
             warning;
 
-        if( item.hasClass(defaults.classes.bad) ){
+        if( item.find('div.'+ defaults.classes.alert).length ){
             if( defaults.alerts )
                 item.find('.'+defaults.classes.alert).html(text);
         }
