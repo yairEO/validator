@@ -272,14 +272,14 @@ var validator = (function($){
              .find('.'+ defaults.classes.alert).remove();
     };
 
-    function testByType(type, value){
+    function testByType(type, value, skip){
         if( type == 'tel' )
             pattern = pattern || 'phone';
 
         if( !type || type == 'password' || type == 'tel' || type == 'search' || type == 'file' )
             type = 'text';
 
-        return tests[type] ? tests[type](value, true) : true;
+        return tests[type] ? tests[type](value, skip) : true;
     }
 
     function prepareFieldData(el){
@@ -297,7 +297,7 @@ var validator = (function($){
         //  String.fromCharCode(e.charCode)
 
         if( e.charCode ){
-            return testByType( this.type, this.value );
+            return testByType( this.type, this.value, true );
         }
     }
 
@@ -367,7 +367,7 @@ var validator = (function($){
             /* validate by type of field. use 'attr()' is proffered to get the actual value and not what the browsers sees for unsupported types.
             */
             //else if( data.valid || data.type == 'select' )
-            data.valid = data.valid * testByType(data.type, data.val);
+            data.valid = data.valid * testByType(data.type, data.val, false);
 
         }
 
