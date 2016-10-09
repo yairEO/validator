@@ -66,10 +66,7 @@ FormValidator.prototype = {
         },
 
         hasValue : function( value ){
-            if( !value ){
-                return this.texts.empty;
-            }
-            return true;
+            return value ? true : this.texts.empty;
         },
 
         // 'linked' is a special test case for inputs which their values should be equal to each other (ex. confirm email or retype password)
@@ -230,10 +227,7 @@ FormValidator.prototype = {
         },
 
         select : function( $field, data ){
-            if( !this.tests.hasValue.call(this, data.value) ){
-                return this.texts.select;
-            }
-            return true;
+            return data.value ? true : this.texts.select;
         },
 
         checkbox : function( $field, data ){
