@@ -419,8 +419,8 @@ FormValidator.prototype = {
 
         var that = this,
             result = {
-                valid  : true,
-                fields : []
+                valid  : true,  // overall form validation flag
+                fields : []     // array of objects (per form field)
             },
             validField,
             // get all the input/textareas/select fields which are required or optional (meaning, they need validation only if they were filled)
