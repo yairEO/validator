@@ -1,10 +1,11 @@
 validator
 =========
-The javascript validation code is based on jQuery. The Validator is cross-browser and will give you the power to use future-proof input types such as ‘tel’, ‘email’, ‘number’, ‘date’, and ‘url’. I can sum this as a ‘template’ for creating web forms.
+The javascript validation code is based on jQuery. The Validator is cross-browser and will give you the power to use future-proof input types such as
+`tel`, `email`, `number`, `date`, `checkbox` and `url`. I can sum this as a `template` for creating web forms.
 
 In the semantic point-of-view, I believe that this method is very clean and…appropriate. This is how forms should be, IMHO.
 
-[DEMO PAGE](http://yaireo.github.io/validator)
+# [DEMO PAGE](http://yaireo.github.io/validator)
 
 ### Why should you use this?
 
