@@ -308,7 +308,7 @@ FormValidator.prototype = {
     },
 
     prepareFieldData : function( $field ){
-        var data =   $field.data(),
+        var data     = $field.data(),
             nodeName = $field[0].nodeName.toLowerCase() ;
 
         data.value   = $field[0].value.replace(/^\s+|\s+$/g, "") // cache the value of the field and trim it
@@ -339,13 +339,17 @@ FormValidator.prototype = {
      * @return {Boolean}
      */
     keypress : function( elm ){
-        var $field = $(elm),
-            data = this.prepareFieldData( $field );
-        //  String.fromCharCode(e.charCode)
+        var that = this;
+        // a hack to let some time pass so the latest value will be read
+        setTimeout(function(){
+            var $field = $(elm),
+                data = that.prepareFieldData( $field );
+            //  String.fromCharCode(e.charCode)
 
-        if( e.charCode ){
-            return this.testByType( $field, data );
-        }
+            if( e.charCode ){
+                return that.testByType( $field, data );
+            }
+        }, 0);
     },
 
     /* Checks a single form field by it's type and specific (custom) attributes
