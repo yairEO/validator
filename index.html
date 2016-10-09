@@ -160,7 +160,7 @@
 
 					<div class="field">
 						<label>
-							<span>Checkboxes</span>
+							<span>Checkboxe</span>
 							<label><input required="required" type="checkbox" />I agree</label>
 						</label>
 					</div>
@@ -200,7 +200,11 @@
 					</div>
 				</fieldset>
 				<fieldset>
-					<p>There is a hidden "Required" form field below, notice it will not be validated due to its lack of visibility. The reason for this is that sometimes there is a section in a form that is not visible until some action is taken, but you do not want to change all those fields' "required" attributes on-the-fly, so that is why.</p>
+					<p>
+						There is a hidden "Required" form field below, notice it will not be validated due to its lack of visibility.<br>
+						The reason for this is that sometimes there is a section in a form that is not visible until some user "action" is taken,
+						and changing form fields to be "required" on-the-fly is undesirable.
+					</p>
 					<input name="somethingHidden" required="required" type="text" style='display:none' />
 				</fieldset>
 				<button id='send' type='submit'>Submit</button>
@@ -211,18 +215,24 @@
     <script src="multifield.js"></script>
     <script src="validator.js"></script>
 	<script>
-		// initialize the validator function
-		validator.message['date'] = 'not a real date';
+		// initialize the validator
+		var validator = new FormValidator();
 
 		// validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
 		$('form')
-			.on('blur', 'input[required], input.optional, select.required', validator.checkField)
-			.on('change', 'select.required', validator.checkField)
-			.on('keypress', 'input[required][pattern]', validator.keypress);
+			.on('blur', 'input[required], input.optional, select.required', function(){
+				validator.checkField.call(validator, this)
+			})
+			.on('change', 'select.required', function(){
+				validator.checkField.call(validator, this)
+			})
+			.on('keypress', 'input[required][pattern]', function(){
+				validator.checkField.call(validator, this)
+			})
 
 		$('.multi.required')
 			.on('keyup blur', 'input', function(){
-				validator.checkField.apply( $(this).siblings().last()[0] );
+				validator.checkField.call( validator, $(this).siblings('[required]')[0] );
 			});
 
 		// bind the validation to the form submit event
@@ -232,10 +242,7 @@
 			e.preventDefault();
 			var submit = true,
 				validatorResult = validator.checkAll(this);
-				
-			console.log('Validation Result:');
-			console.log( validatorResult );
-			
+
 			// Validate the form using generic validaing
 			if( validatorResult.valid ){
 				this.submit();
