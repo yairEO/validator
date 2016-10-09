@@ -188,8 +188,8 @@ FormValidator.prototype = {
         date : function( $field, data ){
             var day, A = data.value.split(/[-./]/g), i;
             // if there is native HTML5 support:
-            // if( "valueAsNumber" in $field[0] )
-            //     return true;
+            if( $field[0].valueAsNumber )
+                return true;
 
             for( i = A.length; i--; ){
                 if( isNaN(parseFloat( data.value )) && !isFinite(data.value) )
@@ -198,7 +198,7 @@ FormValidator.prototype = {
             try{
                 day = new Date(A[2], A[1]-1, A[0]);
                 if( day.getMonth()+1 == A[1] && day.getDate() == A[0] )
-                    return day;
+                    return true;
                 return this.texts.date;
             }
             catch(er){
