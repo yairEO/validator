@@ -84,72 +84,91 @@ The whole approach here is to define each form field (input, select, whatever) a
 
 
 ### Optional fields
-There is also support for optional fields, which are not validated, unless they have a value. The support for this feature is done by adding a class “optional” to a form element. Note that this should not be done along side the “required” attribute.
+There is also support for optional fields, which are not validated, unless they have a value. The support for this feature is done by adding a class `optional` to a form element. Note that this should not be done along side the “required” attribute.
 
 
 
 ## Error messages
-The validator function holds a messages object called "message", which itself holds all the error messages being shown to the user for all sort of validation errors.
+This is the object which holds all the texts used by the form validator:
 
-    message = {
-    	invalid			: 'invalid input',
-    	empty			: 'please put something here',
-    	min				: 'input is too short',
-    	max				: 'input is too long',
-    	number_min		: 'too low',
-    	number_max		: 'too high',
-    	url				: 'invalid URL',
-    	number			: 'not a number',
-    	email			: 'email address is invalid',
-    	email_repeat	: 'emails do not match',
-    	password_repeat	: 'passwords do not match',
-    	no_match	    : 'no match',
-    	complete		: 'input is not complete',
-    	select			: 'Please select an option'
-    };
+    {
+        invalid         : 'inupt is not as expected',
+        short           : 'input is too short',
+        long            : 'input is too long',
+        checked         : 'must be checked',
+        empty           : 'please put something here',
+        select          : 'Please select an option',
+        number_min      : 'too low',
+        number_max      : 'too high',
+        url             : 'invalid URL',
+        number          : 'not a number',
+        email           : 'email address is invalid',
+        email_repeat    : 'emails do not match',
+        date            : 'invalid date',
+        password_repeat : 'passwords do not match',
+        no_match        : 'no match',
+        complete        : 'input is not complete'
+    }
 
 This object can be extended easily. The idea is to extend it with new keys which represent the name of the field you want the message to be linked to, and that custom message appear as the `general error` one. Default messages can be over-ride.
 Example: for a given type ‘date’ field, lets set a custom (general error) message like so:
-    `validator.message['date'] = 'not a real date';`
+
+    var validator = new FormValidator({ date:'not a real date' });
+
+    // or by doing:
+    var validator = new FormValidator();
+    validator.texts.date = 'not a real date';
 
 Error messages can be disabled:
-    `validator.defaults.alerts = false;`
+
+    validator = new FormValidator(null, {alerts:false});
+
+    // or by doing:
+    var validator = new FormValidator();
+    validator.settings.alerts = false;
 
 ## Binding the validation to a form
 
-There are 2 ways to validate form fields, one is on the submit event of the form itself, then all the fields are evaluated one by one. The other method is by binding the ‘checkField’ function itself to each field, for events like “Blur”, “Change” or whatever event you wish (I prefer on Blur).
+There are two ways to validate form fields, one is on the submit event of the form itself, then all the fields are evaluated one by one.
+The other method is by binding the `checkField` function itself to each field, for events like `Blur`, `Change` or whatever event you wish (I prefer on Blur).
 
 ###Usage example - validate on submit
 
 A generic callback function using jQuery to have the form validated on the **Submit** event. You can also include your own personal validations before the **checkAll()** call.
 
+    var validator = new FormValidator();
     $('form').submit(function(e){
-    	e.preventDefault();
-    	var submit = true;
-    	// you can put your own custom validations below
-
-    	// check all the required fields
-    	if( validator.checkAll( $(this) ) )
-    		this.submit();
-
-    	return false;
-    })
+        var validatorResult = validator.checkAll(this);
+        return !!validatorResult.valid;
+    });
 
 ###Usage example - validate on field blur event (out of focus)
 Check every field once it looses focus (onBlur) event
 
-    $('form').on('blur', 'input[required]', validator.checkField);
+    var validator = new FormValidator();
+    $('form').on('blur', 'input[required]', function(){
+        validator.checkField.call(validator, this)
+    }));
 
 ## Tooltips
 
 The helper tooltips **&lt;div class='tooltip help'&gt;**, which work using pure CSS, are element which holds a small **'?'** icon and when hovered over with the mouse, reveals a text explaining what the field “field” is about or for example, what the allowed input format is.
 
 ## Classes
-`validator.defaults.classes` object can be modified with these classes:
+`validator.settings.classes` object can be modified:
 
-    field   : 'field', // class for each input wrapper
-    alert   : 'alert', // call on the alert tooltip
-    bad     : 'bad'    // classes for bad input
+    var validatorClasses = {
+        field : 'field', // class for each input wrapper
+        alert : 'alert', // call on the alert tooltip
+        bad   : 'bad'    // classes for bad input
+    };
+
+    validator = new FormValidator(null, {classes:validatorClasses});
+
+    // or
+    validator = new FormValidator();
+    validator.settings.classes.bad = 'error';
+
 
 ## Bonus – multifields
 

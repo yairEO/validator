@@ -239,16 +239,10 @@
 		//$('#send').click('submit');//.prop('disabled', true);
 
 		$('form').submit(function(e){
-			e.preventDefault();
 			var submit = true,
 				validatorResult = validator.checkAll(this);
 
-			// Validate the form using generic validaing
-			if( validatorResult.valid ){
-				this.submit();
-			}
-
-			return false;
+			return !!validatorResult.valid;
 		});
 
 		/* FOR DEMO ONLY */
