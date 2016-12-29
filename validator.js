@@ -1,5 +1,5 @@
 /*
-    Validator v2.0.2
+    Validator v2.0.3
     (c) Yair Even Or
     https://github.com/yairEO/validator
 
@@ -71,7 +71,7 @@ FormValidator.prototype = {
 
         // 'linked' is a special test case for inputs which their values should be equal to each other (ex. confirm email or retype password)
         linked : function(a, b, type){
-            if( b != a ){
+            if( b != a && a && b ){
                 // choose a specific message or a general one
                 return this.texts[type + '_repeat'] || this.texts.no_match;
             }
@@ -88,9 +88,6 @@ FormValidator.prototype = {
 
         // a "skip" will skip some of the tests (needed for keydown validation)
         text : function($field, data){
-            if( !this.tests.hasValue.call(this, data.value) ){
-                return false;
-            }
             // make sure there are at least X number of words, each at least 2 chars long.
             // for example 'john F kenedy' should be at least 2 words and will pass validation
             if( data.validateWords ){
@@ -256,7 +253,7 @@ FormValidator.prototype = {
             warning;
 
         if( this.settings.alerts ){
-            if( $alert.length)
+            if( $alert.length )
                 $alert.html(text);
             else{
                 warning = $('<div class="'+ this.settings.classes.alert +'">').html( text );
@@ -363,6 +360,8 @@ FormValidator.prototype = {
     checkField : function( field, silent ){
         var $field = $(field);
 
+        this.unmark( $field );
+
         // skip testing fields whom their type is not HIDDEN but they are HIDDEN via CSS.
         if( field.type !='hidden' && $field.is(':hidden') )
             return { valid:true, error:"" }
@@ -378,16 +377,28 @@ FormValidator.prototype = {
         *  this is needed when fixing the placeholders for older browsers which does not support them.
         *  in this case, make sure the "placeholder" jQuery plugin was even used before proceeding
         */
-        testResult = this.tests.sameAsPlaceholder.call(this, $field, data );
+
+        // first, check if the field even has any value
+        testResult = this.tests.hasValue.call(this, data.value);
+
+        // if the field has value, check if that value is same as placeholder
+        if( testResult === true )
+            testResult = this.tests.sameAsPlaceholder.call(this, $field, data );
+
         data.valid = optional || testResult === true;
 
         if( optional && !data.value ){
-            this.unmark( $field );
             return { valid:true, error:"" }
         }
 
         if( testResult !== true )
             data.valid = false;
+
+        // validate by type of field. use 'attr()' is proffered to get the actual value and not what the browsers sees for unsupported types.
+        if( data.valid ){
+            testResult = this.testByType($field, data);
+            data.valid = testResult === true ? true : false;
+        }
 
         // if this field is linked to another field (their values should be the same)
         if( data.valid && data.validateLinked ){
@@ -399,12 +410,6 @@ FormValidator.prototype = {
                 linkedTo = $(':input[name=' + data['validateLinked'] + ']');
 
             testResult = this.tests.linked.call(this, field.value, linkedTo.val(), data.type );
-            data.valid = testResult === true ? true : false;
-        }
-
-        // validate by type of field. use 'attr()' is proffered to get the actual value and not what the browsers sees for unsupported types.
-        if( data.valid ){
-            testResult = this.testByType($field, data);
             data.valid = testResult === true ? true : false;
         }
 
@@ -437,7 +442,7 @@ FormValidator.prototype = {
         fieldsToCheck.each(function(){
             var fieldData = that.checkField(this);
             // use an AND operation, so if any of the fields returns 'false' then the submitted result will be also FALSE
-            result.valid = result.valid * fieldData.valid;
+            result.valid = !!(result.valid * fieldData.valid);
 
             result.fields.push({
                 field   : this,
