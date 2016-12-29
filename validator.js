@@ -1,5 +1,5 @@
 /*
-    Validator v2.0.0
+    Validator v2.0.2
     (c) Yair Even Or
     https://github.com/yairEO/validator
 
@@ -73,7 +73,7 @@ FormValidator.prototype = {
         linked : function(a, b, type){
             if( b != a ){
                 // choose a specific message or a general one
-                return this.texts[type + '_repeat'] || message.no_match;
+                return this.texts[type + '_repeat'] || this.texts.no_match;
             }
             return true;
         },
@@ -339,17 +339,21 @@ FormValidator.prototype = {
      * @return {Boolean}
      */
     keypress : function( elm ){
-        var that = this;
+        var that = this,
+            deferred = new $.Deferred();
         // a hack to let some time pass so the latest value will be read
         setTimeout(function(){
             var $field = $(elm),
-                data = that.prepareFieldData( $field );
+                data = that.prepareFieldData( $field ),
+                test = that.testByType( $field, data );
             //  String.fromCharCode(e.charCode)
 
-            if( e.charCode ){
-                return that.testByType( $field, data );
-            }
+            //if( e.charCode ){
+            deferred.resolve( test );
+           // }
         }, 0);
+
+        return deferred;
     },
 
     /* Checks a single form field by it's type and specific (custom) attributes
@@ -431,7 +435,7 @@ FormValidator.prototype = {
             fieldsToCheck = $form.find(':input').filter('[required=required], .required, .optional').not('[disabled=disabled]');
 
         fieldsToCheck.each(function(){
-            fieldData = that.checkField(this);
+            var fieldData = that.checkField(this);
             // use an AND operation, so if any of the fields returns 'false' then the submitted result will be also FALSE
             result.valid = result.valid * fieldData.valid;
 
@@ -444,5 +448,4 @@ FormValidator.prototype = {
 
         return result;
     }
-
 }
