@@ -33,7 +33,7 @@ FormValidator.prototype = {
         password_repeat : 'passwords do not match',
         no_match        : 'no match',
         complete        : 'input is not complete',
-        password_space  : 'passwords do not match space'  //neil edit
+        password_space  : 'passwords do not space'  //neil edit
     },
 
     // default settings
