@@ -1,10 +1,10 @@
 /*
-    Validator v2.0.3
-    (c) Yair Even Or
-    https://github.com/yairEO/validator
+ Validator v2.0.3
+ (c) Yair Even Or
+ https://github.com/yairEO/validator
 
-    Do not sell this software or use it as part of a package which is sold
-*/
+ Do not sell this software or use it as part of a package which is sold
+ */
 
 
 function FormValidator(texts, settings){
@@ -32,7 +32,8 @@ FormValidator.prototype = {
         date            : 'invalid date',
         password_repeat : 'passwords do not match',
         no_match        : 'no match',
-        complete        : 'input is not complete'
+        complete        : 'input is not complete',
+        password_space  : 'passwords do not match space'  //neil edit
     },
 
     // default settings
@@ -65,8 +66,19 @@ FormValidator.prototype = {
                 return true;
         },
 
-        hasValue : function( value ){
-            return value ? true : this.texts.empty;
+        hasValue : function( data ){
+            var value  = data.value;
+            if (data.type == 'password'){
+                if(value.match(/^[ ]+$/g))
+                    return this.texts.password_space
+                if(value.replace(/^\s+|\s+$/g, "").length == 0)
+                    return this.texts.empty;
+                else
+                    return true;
+            }else{
+                value = value ? true : this.texts.empty;
+            }
+            return value
         },
 
         // 'linked' is a special test case for inputs which their values should be equal to each other (ex. confirm email or retype password)
@@ -272,7 +284,7 @@ FormValidator.prototype = {
     },
 
     /* un-marks invalid fields
-    */
+     */
     unmark : function( $field ){
         if( !$field || !$field.length ){
             console.warn('no "field" argument, null or DOM object not found');
@@ -280,8 +292,8 @@ FormValidator.prototype = {
         }
 
         $field.closest('.' + this.settings.classes.item)
-             .removeClass(this.settings.classes.bad)
-             .find('.'+ this.settings.classes.alert).remove();
+            .removeClass(this.settings.classes.bad)
+            .find('.'+ this.settings.classes.alert).remove();
     },
 
     /**
@@ -308,7 +320,12 @@ FormValidator.prototype = {
         var data     = $field.data(),
             nodeName = $field[0].nodeName.toLowerCase() ;
 
-        data.value   = $field[0].value.replace(/^\s+|\s+$/g, "") // cache the value of the field and trim it
+        if (data.type == 'password'){
+            data.value   = $field[0].value
+        }else{
+            data.value   = $field[0].value.replace(/^\s+|\s+$/g, "");// cache the value of the field and trim it
+        }
+
         data.valid   = true             // initialize validity of field
         data.type    = $field.attr('type');   // every field starts as 'valid=true' until proven otherwise
         data.pattern = $field.attr('pattern');
@@ -321,7 +338,7 @@ FormValidator.prototype = {
             data.type = "text";
 
         /* Gather Custom data attributes for specific validation:
-        */
+         */
         data.validateWords = data['validateWords']       || 0;
         data.lengthRange   = data['validateLengthRange'] ? (data['validateLengthRange']+'').split(',') : [1];
         data.lengthLimit   = data['validateLength']      ? (data['validateLength']+'').split(',') : false;
@@ -347,16 +364,16 @@ FormValidator.prototype = {
 
             //if( e.charCode ){
             deferred.resolve( test );
-           // }
+            // }
         }, 0);
 
         return deferred;
     },
 
     /* Checks a single form field by it's type and specific (custom) attributes
-    * {DOM Object}     - the field to be checked
-    * {Boolean} silent - don't mark a field and only return if it passed the validation or not
-    */
+     * {DOM Object}     - the field to be checked
+     * {Boolean} silent - don't mark a field and only return if it passed the validation or not
+     */
     checkField : function( field, silent ){
         var $field = $(field);
 
@@ -374,12 +391,12 @@ FormValidator.prototype = {
 
         // check if field has any value
         /* Validate the field's value is different than the placeholder attribute (and attribute exists)
-        *  this is needed when fixing the placeholders for older browsers which does not support them.
-        *  in this case, make sure the "placeholder" jQuery plugin was even used before proceeding
-        */
+         *  this is needed when fixing the placeholders for older browsers which does not support them.
+         *  in this case, make sure the "placeholder" jQuery plugin was even used before proceeding
+         */
 
         // first, check if the field even has any value
-        testResult = this.tests.hasValue.call(this, data.value);
+        testResult = this.tests.hasValue.call(this, data);
 
         // if the field has value, check if that value is same as placeholder
         if( testResult === true )
