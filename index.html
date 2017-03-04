@@ -16,10 +16,10 @@
 	<a class='btn github' href='https://github.com/yairEO/validator'>Github</a>
 	<div id='wrap'>
 		<div class='options'>
-			<label>
+		<!-- 	<label>
 				<input type='checkbox' id='vfields' />
 				Vertical orientation
-			</label>
+			</label> -->
 			<label>
 				<input type='checkbox' id='alerts' />
 				Disable alerts
@@ -103,6 +103,19 @@
 					</div>
 					<div class="field">
 						<label>
+							<span>Time</span>
+							<input class='time' type="time" name="time" required='required'>
+							<div class='tooltip help'>
+							<span>?</span>
+							<div class='content'>
+								<b></b>
+								<p>Format should be: XX:XX</p>
+							</div>
+						</div>
+						</label>
+					</div>
+					<div class="field">
+						<label>
 							<span>Password</span>
 							<input type="password" name="password" data-validate-length="6,8" required='required'>
 						</label>
@@ -136,7 +149,7 @@
 					<div class="field">
 						<label>
 							<span>Drop down selection</span>
-							<select class="required" name="dropdown">
+							<select required name="dropdown">
 								<option value="">-- please select --</option>
 								<option value="o1">Option 1</option>
 								<option value="o2">Option 2</option>
@@ -216,42 +229,48 @@
     <script src="validator.js"></script>
 	<script>
 		// initialize the validator
-		var validator = new FormValidator();
+		var validator = new FormValidator(),
+			$form = $('form');
 
-		// validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
-		$('form')
-			.on('blur', 'input[required], input.optional, select.required', function(){
-				validator.checkField.call(validator, this)
-			})
-			.on('change', 'select.required', function(){
-				validator.checkField.call(validator, this)
-			})
-			.on('keypress', 'input[required][pattern]', function(){
-				validator.checkField.call(validator, this)
-			})
 
-		$('.multi.required')
-			.on('keyup blur', 'input', function(){
-				validator.checkField.call( validator, $(this).siblings('[required]')[0] );
-			});
+		document.forms[0].addEventListener('blur', function(e){
+			validator.checkField.call(validator, e.target)
+		}, true);
+
+		document.forms[0].addEventListener('input', function(e){
+			validator.checkField.call(validator, e.target);
+		}, true);
+
+		document.forms[0].addEventListener('change', function(e){
+			validator.checkField.call(validator, e.target)
+		}, true);
+
+		document.forms[0].onsubmit = function(e){
+			var submit = true,
+				validatorResult = validator.checkAll(this);
+
+			console.log(validatorResult);
+			return !!validatorResult.valid;
+		};
+
+
+		// $('.multi.required')
+		// 	.on('keyup blur', 'input', function(){
+		// 		var field = validator.checkField.call( validator, this)
+		// 		.siblings('[required]')[0] );
+		// 	});
 
 		// bind the validation to the form submit event
 		//$('#send').click('submit');//.prop('disabled', true);
 
-		$('form').submit(function(e){
-			var submit = true,
-				validatorResult = validator.checkAll(this);
-
-			return !!validatorResult.valid;
-		});
 
 		/* FOR DEMO ONLY */
-		$('#vfields').change(function(){
-			$('form').toggleClass('mode2');
-		}).prop('checked',false);
+		// $('#vfields').change(function(){
+		// 	$('form').toggleClass('mode2');
+		// }).prop('checked',false);
 
 		$('#alerts').change(function(){
-			validator.defaults.alerts = (this.checked) ? false : true;
+			validator.settings.alerts = (this.checked) ? false : true;
 			if( this.checked )
 				$('form .alert').remove();
 		}).prop('checked',false);

@@ -101,7 +101,7 @@ form .field.fields{ height:auto; }
 
 	.bad input,
 	.bad select,
-	.bad textarea{ border:1px solid #CE5454; box-shadow:0 0 4px -2px #CE5454; position:relative; left:0; -moz-animation:.7s 1 shake linear; -webkit-animation:0.7s 1 shake linear; }
+	.bad textarea{ border:1px solid #CE5454; box-shadow:0 0 4px -2px #CE5454; position:relative; left:0; -moz-animation:.4s 1 shake ease; -webkit-animation:0.4s 1 shake ease; }
 
 
 /* mode2 - where the label's text is above the field and not next to it

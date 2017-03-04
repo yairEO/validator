@@ -1,9 +1,8 @@
 validator
 =========
-The javascript validation code is based on jQuery. The Validator is cross-browser and will give you the power to use future-proof input types such as
-`tel`, `email`, `number`, `date`, `checkbox` and `url`. I can sum this as a `template` for creating web forms.
+The Validator is cross-browser and will give you the power to use future-proof input types such as
+`tel`, `email`, `number`, `date`, `time`, `checkbox` and `url`.
 
-In the semantic point-of-view, I believe that this method is very clean and…appropriate. This is how forms should be, IMHO.
 
 # [DEMO PAGE](http://yaireo.github.io/validator)
 
@@ -13,7 +12,7 @@ In the semantic point-of-view, I believe that this method is very clean and…ap
 * Deals with all sorts of edge cases
 * Utilize new HTML5 types for unsupported browsers
 * Flexible error messaging system
-* Light-weight (10kb + comments)
+* Light-weight (19kb + comments, unminified)
 
 ## Validation types support
 HTML5 offers a wide selection of input types. I saw no need to support them all, for example, a checkbox should not be validated as ‘required’ because why wouldn’t it be checked in the first place when the form is rendered?
@@ -26,17 +25,15 @@ These input types can be validated by the the JS for – `<input type='foo' name
 * Password
 * Number
 * Date
+* Time
 * URL
 * Search
 * File
 * Tel
 * Checkbox
-* Hidden – Hidden fields can also have the ‘required’ attribute
-
-The below form elements are also supported:
-
-* Select – Useing a ‘required’ class because there is no such attribute for ‘select’ element
+* Select
 * Textarea
+* Hidden – Hidden fields can also have the ‘required’ attribute
 
 
 ## Basic semantics
@@ -78,7 +75,7 @@ The whole approach here is to define each form field (input, select, whatever) a
 | data-validate-words        | Defines the minimum amount of words for this field                                                                                                                                                                                                                                                                              |
 | data-validate-length       | Defines the length allowed for the field (after trim). Example value: `7,11` (field can only have 7 or 11 characters). you can add how many allowed lengths you wish                                                                                                                                                            |
 | data-validate-length-range | Defines the minimum and/or maximum number of chars in the field (after trim). value can be `4,8` for example, or just `4` to set minimum chars only                                                                                                                                                                             |
-| data-validate-linked       | Defines the field which the current field’s value (the attribute is set on) should be compared to                                                                                                                                                                                                                               |
+| data-validate-linked       | Defines the field which the current field’s value (the attribute is set on) should be compared to. Value can be a selector or another input's `name` attribute's value                                                                                                                                                          |
 | data-validate-minmax       | For type `number` only. Defines the minimum and/or maximum value that can be in that field                                                                                                                                                                                                                                      |
 
 
@@ -106,6 +103,7 @@ This is the object which holds all the texts used by the form validator:
         email           : 'email address is invalid',
         email_repeat    : 'emails do not match',
         date            : 'invalid date',
+        time            : 'invalid time',
         password_repeat : 'passwords do not match',
         no_match        : 'no match',
         complete        : 'input is not complete'
@@ -114,9 +112,10 @@ This is the object which holds all the texts used by the form validator:
 This object can be extended easily. The idea is to extend it with new keys which represent the name of the field you want the message to be linked to, and that custom message appear as the `general error` one. Default messages can be over-ride.
 Example: for a given type ‘date’ field, lets set a custom (general error) message like so:
 
+    // set custom text on initialization:
     var validator = new FormValidator({ date:'not a real date' });
 
-    // or by doing:
+    // or post-initialization
     var validator = new FormValidator();
     validator.texts.date = 'not a real date';
 
@@ -135,21 +134,23 @@ The other method is by binding the `checkField` function itself to each field, f
 
 ###Usage example - validate on submit
 
-A generic callback function using jQuery to have the form validated on the **Submit** event. You can also include your own personal validations before the **checkAll()** call.
+A generic callback function to have the form validated on the **Submit** event. You can also include your own personal validations before the **checkAll()** call.
 
     var validator = new FormValidator();
-    $('form').submit(function(e){
+    // select your "form" element from the DOM and attach an "onsubmit" event handler to it:
+    document.forms[0].onsubmit = function(e){
         var validatorResult = validator.checkAll(this);
+
         return !!validatorResult.valid;
-    });
+    };
 
 ###Usage example - validate on field blur event (out of focus)
 Check every field once it looses focus (onBlur) event
 
     var validator = new FormValidator();
-    $('form').on('blur', 'input[required]', function(){
-        validator.checkField.call(validator, this)
-    }));
+    document.forms[0].addEventListener('blur', function(e){
+        validator.checkField.call(validator, e.target)
+    }, true);
 
 ## Tooltips
 
