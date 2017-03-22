@@ -15,7 +15,7 @@ function FormValidator(texts, settings){
 FormValidator.prototype = {
     // Validation error texts
     texts : {
-        invalid         : 'inupt is not as expected',
+        invalid         : 'input is not as expected',
         short           : 'input is too short',
         long            : 'input is too long',
         checked         : 'must be checked',
