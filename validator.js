@@ -51,6 +51,9 @@ FormValidator.prototype = {
             item  : 'field',
             alert : 'alert',
             bad   : 'bad'
+        },
+        findItem : function( field ){
+            return this.closest(field, '.' + this.settings.classes.item)
         }
     },
 
@@ -256,7 +259,7 @@ FormValidator.prototype = {
 
         // check if not already marked as 'bad' and add the 'alert' object.
         // if already is marked as 'bad', then make sure the text is set again because i might change depending on validation
-        var item = this.closest(field, '.' + this.settings.classes.item),
+        var item = this.settings.findItem(field),
             alert = item.querySelector('.'+this.settings.classes.alert),
             warning;
 
@@ -287,7 +290,7 @@ FormValidator.prototype = {
             return false;
         }
 
-        var fieldWrap = this.closest(field, '.' + this.settings.classes.item);
+        var fieldWrap = this.settings.findItem(field);
 
         if( fieldWrap ){
             var warning = fieldWrap.querySelector('.'+ this.settings.classes.alert);
