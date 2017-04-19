@@ -129,19 +129,10 @@ FormValidator.prototype = {
             if( data.pattern ){
                 var regex, jsRegex;
 
-                switch( data.pattern ){
-                    case 'alphanumeric' :
-                        regex = this.settings.regex.alphanumeric
-                        break;
-                    case 'numeric' :
-                        regex = this.settings.regex.numeric
-                        break;
-                    case 'phone' :
-                        regex = this.settings.regex.phone
-                        break;
-                    default :
-                        regex = data.pattern;
-                }
+                if( typeof this.settings.regex[data.pattern] === 'undefined' )
+                    regex = data.pattern
+                else
+                    regex = this.settings.regex[data.pattern]
                 try{
                     jsRegex = new RegExp(regex).test(data.value);
                     if( data.value && !jsRegex ){
