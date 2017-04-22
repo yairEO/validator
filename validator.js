@@ -259,7 +259,7 @@ FormValidator.prototype = {
 
         // check if not already marked as 'bad' and add the 'alert' object.
         // if already is marked as 'bad', then make sure the text is set again because i might change depending on validation
-        var item = this.settings.findItem(field),
+        var item = this.settings.findItem.call(this, field),
             alert = item.querySelector('.'+this.settings.classes.alert),
             warning;
 
@@ -290,7 +290,7 @@ FormValidator.prototype = {
             return false;
         }
 
-        var fieldWrap = this.settings.findItem(field);
+        var fieldWrap = this.settings.findItem.call(this, field);
 
         if( fieldWrap ){
             var warning = fieldWrap.querySelector('.'+ this.settings.classes.alert);
