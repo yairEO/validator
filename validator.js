@@ -1,5 +1,5 @@
 /*
-    Validator v3.0.0
+    Validator v3.0.1
     (c) Yair Even Or
     https://github.com/yairEO/validator
 */
@@ -341,7 +341,7 @@ FormValidator.prototype = {
         */
         this.data[id].validateWords  = field.getAttribute('data-validate-words')        || 0;
         this.data[id].lengthRange    = field.getAttribute('data-validate-length-range') ? (field.getAttribute('data-validate-length-range')+'').split(',') : [1];
-        this.data[id].lengthLimit    = field.getAttribute('data-validateL-length')      ? (field.getAttribute('data-validateL-length')+'').split(',') : false;
+        this.data[id].lengthLimit    = field.getAttribute('data-validate-length')      ? (field.getAttribute('data-validate-length')+'').split(',') : false;
         this.data[id].minmax         = field.getAttribute('data-validate-minmax')       ? (field.getAttribute('data-validate-minmax')+'').split(',') : false; // for type 'number', defines the minimum and/or maximum for the value as a number.
         this.data[id].validateLinked = field.getAttribute('data-validate-linked');
 
@@ -520,3 +520,9 @@ FormValidator.prototype = {
         return result;
     }
 }
+
+(function (global, factory) {
+    typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
+    typeof define === 'function' && define.amd ? define(factory) :
+    (factory());
+}(this, FormValidator));
