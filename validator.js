@@ -1,5 +1,5 @@
 /*
-    Validator v3.0.1
+    Validator v3.0.2
     (c) Yair Even Or
     https://github.com/yairEO/validator
 */
@@ -408,7 +408,7 @@ FormValidator.prototype = {
 
         // if field did not pass filtering or is simply not passed
         if( !field )
-            return {};
+            return { valid:true, error:"" }
 
        // this.unmark( field );
 
