@@ -1,5 +1,5 @@
 /*
-    Validator v3.0.2
+    Validator v3.0.3
     (c) Yair Even Or
     https://github.com/yairEO/validator
 */
