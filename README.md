@@ -42,7 +42,7 @@ These input types can be validated by the the JS for – `<input type='foo' name
     		<div class="field">
     			<label>
     				<span>Name</span>
-    				<input data-validate-lengthRange="6" data-validate-words="2" name="name" placeholder="ex. John f. Kennedy" required="required" type="text" />
+    				<input data-validate-length-range="6" data-validate-words="2" name="name" placeholder="ex. John f. Kennedy" required="required" type="text" />
     			</label>
     			<div class='tooltip help'>
     				<span>?</span>

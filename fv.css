@@ -79,8 +79,8 @@ button[type=submit]{ font-size:1.1em; padding:5px 25px; }
 form fieldset{ clear:both; margin:0 0 10px 0; }
 form .field{ padding:5px 0; position:relative; height:2em; }
 form .field.fields{ height:auto; }
-	.field label, .field .label{ float:left; cursor:pointer; }
-		.field label span, .field .label{ float:left; width:160px; text-transform:capitalize; line-height:2em; }
+	.field label, .field .label{  cursor:pointer; }
+		.field label > span:first-child, .field .label{ float:left; width:160px; text-transform:capitalize; line-height:2em; }
 	.field input, .field textarea{ float:left; padding:3px 4px; width:210px; -webkit-transition:0.2s; -moz-transition:0.2s; transition:0.2s; }
 	.field input[type=checkbox]{ width:auto; }
 

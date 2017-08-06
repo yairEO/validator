@@ -45,13 +45,13 @@
 					<div class="field">
 						<label>
 							<span>Occupation</span>
-							<input class='optional' name="occupation" data-validate-length-range="5,20" type="text" />
+							<input class='optional' name="occupation" data-validate-length-range="5,15" type="text" />
 						</label>
 						<div class='tooltip help'>
 							<span>?</span>
 							<div class='content'>
 								<b></b>
-								<p>An optional field. This field is only validated when it has a value.<br /><em>Minimum 5 chars for this example.</em></p>
+								<p>An optional field. This field is only validated when it has a value.<br /><em>Minimum 5 chars, maximum 15</em></p>
 							</div>
 						</div>
                         <span class='extra'>(optional)</span>
@@ -173,8 +173,9 @@
 
 					<div class="field">
 						<label>
-							<span>Checkboxe</span>
-							<label><input required="required" type="checkbox" />I agree</label>
+							<span>Checkbox</span>
+							<input required="required" type="checkbox" />
+							<span>I agree</span>
 						</label>
 					</div>
 
