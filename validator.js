@@ -480,7 +480,7 @@
          * @param  {HTMLCollection} form fields Array [description]
          * @return {Array}                            [description]
          */
-        filterFormElements( fields ){
+        filterFormElements : function( fields ){
             var i,
                 fieldsToCheck = [];
 
