@@ -1,5 +1,5 @@
 /*
-    Validator v3.0.3
+    Validator v3.0.4
     (c) Yair Even Or
     https://github.com/yairEO/validator
 */
@@ -480,7 +480,7 @@
          * @param  {HTMLCollection} form fields Array [description]
          * @return {Array}                            [description]
          */
-        filterFormElements( fields ){
+        filterFormElements : function( fields ){
             var i,
                 fieldsToCheck = [];
 
