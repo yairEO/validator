@@ -440,7 +440,7 @@
 
             data.valid = optional || testResult === true;
 
-            if( optional && !data.value ){
+            if( optional ){
                 return { valid:true, error:"" }
             }
 
