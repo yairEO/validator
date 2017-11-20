@@ -21,8 +21,8 @@
 				Vertical orientation
 			</label> -->
 			<label>
-				<input type='checkbox' id='alerts' />
-				Disable alerts
+				<input type='checkbox' class='toggleValidationTooltips' />
+				Disable vlidation tooltips
 			</label>
 		</div>
 		<h1 title='how forms should be done.'>Forms: validation, styling &amp; semantics</h1>
@@ -179,6 +179,14 @@
 						</label>
 					</div>
 
+					<div class="field">
+						<label>
+							<span>Checkbox</span>
+							<input type="checkbox" />
+							<span>Optional Checkbox</span>
+						</label>
+					</div>
+
 					<div class="field multi required">
 						<label for='multi_first'>
 							<span>Multifield</span>
@@ -221,7 +229,8 @@
 					</p>
 					<input name="somethingHidden" required="required" type="text" style='display:none' />
 				</fieldset>
-				<button id='send' type='submit'>Submit</button>
+				<button type='submit'>Submit</button>
+                <button type='reset'>Reset</button>
 			</form>
 		</section>
 	</div>
@@ -229,23 +238,12 @@
     <script src="multifield.js"></script>
     <script src="validator.js"></script>
 	<script>
-		// initialize the validator
-		var validator = new FormValidator(),
-			$form = $('form');
+		// initialize a validator instance from the "FormValidator" constructor.
+        // A "<form>" element is optionally passed as an argument, but is not a must
+		var validator = new FormValidator({"events" : ['blur', 'input', 'change']}, document.forms[0]);
 
 
-		document.forms[0].addEventListener('blur', function(e){
-			validator.checkField.call(validator, e.target)
-		}, true);
-
-		document.forms[0].addEventListener('input', function(e){
-			validator.checkField.call(validator, e.target);
-		}, true);
-
-		document.forms[0].addEventListener('change', function(e){
-			validator.checkField.call(validator, e.target)
-		}, true);
-
+        // on form "submit" event
 		document.forms[0].onsubmit = function(e){
 			var submit = true,
 				validatorResult = validator.checkAll(this);
@@ -255,23 +253,16 @@
 		};
 
 
-		// $('.multi.required')
-		// 	.on('keyup blur', 'input', function(){
-		// 		var field = validator.checkField.call( validator, this)
-		// 		.siblings('[required]')[0] );
-		// 	});
+        // on form "reset" event
+        document.forms[0].onreset = function(e){
+            console.log(this)
+            validator.reset(this);
+        };
 
-		// bind the validation to the form submit event
-		//$('#send').click('submit');//.prop('disabled', true);
+        // stuff related ONLY for this demo page:
+		$('.toggleValidationTooltips').change(function(){
+			validator.settings.alerts = !this.checked;
 
-
-		/* FOR DEMO ONLY */
-		// $('#vfields').change(function(){
-		// 	$('form').toggleClass('mode2');
-		// }).prop('checked',false);
-
-		$('#alerts').change(function(){
-			validator.settings.alerts = (this.checked) ? false : true;
 			if( this.checked )
 				$('form .alert').remove();
 		}).prop('checked',false);

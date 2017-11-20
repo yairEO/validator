@@ -44,7 +44,7 @@ input:focus, textarea:focus{ border-color:#AAA; }
 
 input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
 input[type=checkbox]{ width:auto; border:none; bottom:-1px; cursor:pointer; margin:2px 8px 0 0; position:relative; transform:scale(1.2); }
-button[type=submit]{ font-size:1.1em; padding:5px 25px; }
+button{ font-size:1.1em; padding:5px 25px; }
 
 /* Tooltips helpers */
 .field .tooltip{ float:left; top:2px; left:7px; position:relative; z-index:2; }

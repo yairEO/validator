@@ -1,5 +1,5 @@
 /*
-    Validator v3.0.4
+    Validator v3.3.0
     (c) Yair Even Or
     https://github.com/yairEO/validator
 */
@@ -12,11 +12,17 @@
     else
         root.FormValidator = factory();
 }(this, function(){
-    function FormValidator(texts, settings){
+    function FormValidator( settings, formElm ){
         this.data = {}; // holds the form fields' data
 
-        this.texts = this.extend({}, this.texts, texts || {});
-        this.settings = this.extend({}, this.defaults, settings || {})
+        this.DOM = {
+            scope : formElm
+        };
+
+        this.settings = this.extend({}, this.defaults, settings || {});
+        this.texts = this.extend({}, this.texts, settings.texts || {});
+
+        this.settings.events && this.events();
     }
 
     FormValidator.prototype = {
@@ -43,6 +49,8 @@
 
         // default settings
         defaults : {
+            alerts : true,
+            events : false,
             regex : {
                 url          : /^(https?:\/\/)?([\w\d\-_]+\.+[A-Za-z]{2,})+\/?/,
                 phone        : /^\+?([0-9]|[-|' '])+$/i,
@@ -53,7 +61,6 @@
                     filter       : /^.+@.+\..{2,6}$/ // exmaple email "steve@s-i.photo"
                 }
             },
-            alerts  : true,
             classes : {
                 item  : 'field',
                 alert : 'alert',
@@ -250,6 +257,32 @@
         },
 
         /**
+         * bind events on form elements
+         * @param  {Array/String} types   [description]
+         * @param  {Object} formElm       [optional - form element, if one is not already defined on the instance]
+         * @return {[type]}               [description]
+         */
+        events : function( types, formElm ){
+            var that = this;
+
+            types   = types   || this.settings.events;
+            formElm = formElm || this.DOM.scope;
+
+            if( !formElm || !types ) return;
+
+            if( types instanceof Array )
+                types.forEach(bindEventByType);
+            else if( typeof types == 'string' )
+                bindEventByType(types)
+
+            function bindEventByType( type ){
+                formElm.addEventListener(type, function(e){
+                    that.checkField(e.target)
+                }, true);
+            }
+        },
+
+        /**
          * Marks an field as invalid
          * @param  {DOM Object} field
          * @param  {String} text
@@ -289,6 +322,8 @@
         /* un-marks invalid fields
         */
         unmark : function( field ){
+            var warning;
+
             if( !field ){
                 console.warn('no "field" argument, null or DOM object not found');
                 return false;
@@ -297,12 +332,25 @@
             var fieldWrap = this.closest(field, '.' + this.settings.classes.item);
 
             if( fieldWrap ){
-                var warning = fieldWrap.querySelector('.'+ this.settings.classes.alert);
+                warning = fieldWrap.querySelector('.'+ this.settings.classes.alert);
                 fieldWrap.classList.remove(this.settings.classes.bad);
             }
 
             if( warning )
                 warning.parentNode.removeChild(warning);
+        },
+
+        /**
+         * removes unmarks all fields
+         * @return {[type]} [description]
+         */
+        reset : function( formElm ){
+            var fieldsToCheck = this.filterFormElements( formElm.elements ),
+                that = this;
+
+            fieldsToCheck.forEach(function(elm){
+                that.unmark(elm);
+            });
         },
 
         /**
@@ -348,19 +396,25 @@
             */
             this.data[id].validateWords  = field.getAttribute('data-validate-words')        || 0;
             this.data[id].lengthRange    = field.getAttribute('data-validate-length-range') ? (field.getAttribute('data-validate-length-range')+'').split(',') : [1];
-            this.data[id].lengthLimit    = field.getAttribute('data-validate-length')      ? (field.getAttribute('data-validate-length')+'').split(',') : false;
-            this.data[id].minmax         = field.getAttribute('data-validate-minmax')       ? (field.getAttribute('data-validate-minmax')+'').split(',') : false; // for type 'number', defines the minimum and/or maximum for the value as a number.
+            this.data[id].lengthLimit    = field.getAttribute('data-validate-length')       ? (field.getAttribute('data-validate-length')+'').split(',')       : false;
+            this.data[id].minmax         = field.getAttribute('data-validate-minmax')       ? (field.getAttribute('data-validate-minmax')+'').split(',')       : false; // for type 'number', defines the minimum and/or maximum for the value as a number.
             this.data[id].validateLinked = field.getAttribute('data-validate-linked');
 
             return this.data[id];
         },
 
+        /**
+         * Find the closeset element, by selector
+         * @param  {Object} el       [DOM node]
+         * @param  {String} selector [CSS-valid selector]
+         * @return {Object}          [Found element or null if not found]
+         */
         closest : function(el, selector){
             var matchesFn;
 
             // find vendor prefix
-            ['matches','webkitMatchesSelector','mozMatchesSelector','msMatchesSelector','oMatchesSelector'].some(function(fn) {
-                if (typeof document.body[fn] == 'function') {
+            ['matches','webkitMatchesSelector','mozMatchesSelector','msMatchesSelector','oMatchesSelector'].some(function(fn){
+                if( typeof document.body[fn] == 'function' ){
                     matchesFn = fn;
                     return true;
                 }
@@ -381,8 +435,10 @@
             return null;
         },
 
-        // MDN polyfill for Object.assign
-        extend : function(target, varArgs){
+        /**
+         * MDN polyfill for Object.assign
+         */
+        extend : function( target, varArgs ){
             if( !target )
                 throw new TypeError('Cannot convert undefined or null to object');
 
@@ -497,8 +553,8 @@
             return fieldsToCheck;
         },
 
-        checkAll : function( form ){
-            if( !form ){
+        checkAll : function( formElm ){
+            if( !formElm ){
                 console.warn('element not found');
                 return false;
             }
@@ -508,7 +564,7 @@
                     valid  : true,  // overall form validation flag
                     fields : []     // array of objects (per form field)
                 },
-                fieldsToCheck= this.filterFormElements( form.elements );
+                fieldsToCheck = this.filterFormElements( formElm.elements );
                 // get all the input/textareas/select fields which are required or optional (meaning, they need validation only if they were filled)
 
             fieldsToCheck.forEach(function(elm, i){

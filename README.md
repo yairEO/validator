@@ -113,17 +113,23 @@ This object can be extended easily. The idea is to extend it with new keys which
 Example: for a given type ‘date’ field, lets set a custom (general error) message like so:
 
     // set custom text on initialization:
-    var validator = new FormValidator({ date:'not a real date' });
+    var validator = new FormValidator({
+        texts : {
+            date:'not a real date'
+        }
+    });
 
     // or post-initialization
     var validator = new FormValidator();
     validator.texts.date = 'not a real date';
 
-Error messages can be disabled:
+Error messages (per field) can be disabled:
 
-    validator = new FormValidator(null, {alerts:false});
+    validator = new FormValidator({
+        alerts:false
+    });
 
-    // or by doing:
+    // or by:
     var validator = new FormValidator();
     validator.settings.alerts = false;
 
@@ -132,7 +138,7 @@ Error messages can be disabled:
 There are two ways to validate form fields, one is on the submit event of the form itself, then all the fields are evaluated one by one.
 The other method is by binding the `checkField` function itself to each field, for events like `Blur`, `Change` or whatever event you wish (I prefer on Blur).
 
-###Usage example - validate on submit
+### Usage example - validate on submit
 
 A generic callback function to have the form validated on the **Submit** event. You can also include your own personal validations before the **checkAll()** call.
 
@@ -144,15 +150,40 @@ A generic callback function to have the form validated on the **Submit** event. 
         return !!validatorResult.valid;
     };
 
-###Usage example - validate on field blur event (out of focus)
-Check every field once it looses focus (onBlur) event
+### Usage example - validate on field blur/input/change events
+Check every field (using event Capture)
 
     var validator = new FormValidator();
+
     document.forms[0].addEventListener('blur', function(e){
-        validator.checkField.call(validator, e.target)
+        validator.checkField(e.target)
     }, true);
 
-## Tooltips
+    document.forms[0].addEventListener('input', function(e){
+        validator.checkField(e.target);
+    }, true);
+
+    document.forms[0].addEventListener('change', function(e){
+        validator.checkField(e.target)
+    }, true);
+
+Utilize the internal events' binding system; pass in the settings the `events` property and assign it an array which states which events should be inputs be validated for. For a single events, a string may be paassed instead of an Array:
+
+    var validator = new FormValidator( document.forms[0], {
+        "events" : ['blur', 'input', 'change'] // for a single one, just pass a string, ex: "blur"
+    });
+
+In case the form is not yet ready, the events maybe be binded later, when the form is ready, using the internal `events` method for a `validator` instance:
+
+    // validate fields on these events:
+
+    var validator = new FormValidator(document.forms[0]); // the "<form>" element should be passed when the instance is created or passed to the "events" method below (as the 2nd parameter)
+
+    // wait for the form, or its' fields, to be ready (for whatever reason), and then bind the events as follows:
+    validator.events(['blur', 'input', 'change']);
+
+
+## Tooltips (for each field which did not validate)
 
 The helper tooltips **&lt;div class='tooltip help'&gt;**, which work using pure CSS, are element which holds a small **'?'** icon and when hovered over with the mouse, reveals a text explaining what the field “field” is about or for example, what the allowed input format is.
 
