@@ -84,7 +84,7 @@
 
             // 'linked' is a special test case for inputs which their values should be equal to each other (ex. confirm email or retype password)
             linked : function(a, b, type){
-                if( b != a && a && b ){
+                if( b != a ){
                     // choose a specific message or a general one
                     return this.texts[type + '_repeat'] || this.texts.no_match;
                 }
