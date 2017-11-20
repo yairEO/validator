@@ -255,8 +255,7 @@
 
         // on form "reset" event
         document.forms[0].onreset = function(e){
-            console.log(this)
-            validator.reset(this);
+            validator.reset();
         };
 
         // stuff related ONLY for this demo page:

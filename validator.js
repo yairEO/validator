@@ -1,10 +1,10 @@
 /*
-    Validator v3.3.0
+    Validator v3.3.1
     (c) Yair Even Or
     https://github.com/yairEO/validator
 */
 
-;(function(root, factory) {
+;(function(root, factory){
     if( typeof define === 'function' && define.amd )
         define([], factory);
     else if( typeof exports === 'object' )
@@ -345,8 +345,11 @@
          * @return {[type]} [description]
          */
         reset : function( formElm ){
-            var fieldsToCheck = this.filterFormElements( formElm.elements ),
+            var fieldsToCheck,
                 that = this;
+
+            formElm = formElm || this.DOM.scope;
+            fieldsToCheck = this.filterFormElements( formElm.elements );
 
             fieldsToCheck.forEach(function(elm){
                 that.unmark(elm);
