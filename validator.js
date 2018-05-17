@@ -173,6 +173,7 @@
 
             number : function( field, data ){
                 var a = data.value;
+
                 // if not not a number
                 if( isNaN(parseFloat(a)) && !isFinite(a) ){
                     return this.texts.number;
@@ -286,7 +287,7 @@
          * Marks an field as invalid
          * @param  {DOM Object} field
          * @param  {String} text
-         * @return {jQuery Object} - The message element for the field
+         * @return {String} - useless string (should be the DOM node added for warning)
          */
         mark : function( field, text ){
             if( !text || !field )
@@ -487,7 +488,6 @@
             // check if field has any value
             /* Validate the field's value is different than the placeholder attribute (and attribute exists)
             *  this is needed when fixing the placeholders for older browsers which does not support them.
-            *  in this case, make sure the "placeholder" jQuery plugin was even used before proceeding
             */
 
             // first, check if the field even has any value
