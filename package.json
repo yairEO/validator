@@ -1,6 +1,6 @@
 {
   "name"        : "@yaireo/validator",
-  "version"     : "3.3.2",
+  "version"     : "3.3.3",
   "homepage"    : "https://github.com/yairEO/validator",
   "description" : "The Validator is cross-browser and will give you the power to use future-proof input types such as `tel`, `email`, `number`, `date`, `time`, `checkbox` and `url`",
   "_npmUser"    : {
