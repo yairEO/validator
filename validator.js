@@ -300,7 +300,7 @@
 
             // check if not already marked as 'bad' and add the 'alert' object.
             // if already is marked as 'bad', then make sure the text is set again because i might change depending on validation
-            var item = this.closest(field, '.' + this.settings.classes.item),
+            var item = this.closest(field, '.' + this.settings.classes.item) || field,
                 alert = item.querySelector('.'+this.settings.classes.alert),
                 warning;
 
