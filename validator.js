@@ -23,7 +23,7 @@
         };
 
         this.settings = this.extend({}, this.defaults, settings || {});
-        this.texts = this.extend({}, this.texts, settings.texts || {});
+        this.texts = this.extend({}, this.texts, this.settings.texts || {});
 
         this.settings.events && this.events();
     }
