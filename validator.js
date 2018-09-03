@@ -5,10 +5,13 @@
 */
 
 ;(function(root, factory){
+    var define = define || {};
     if( typeof define === 'function' && define.amd )
         define([], factory);
-    else if( typeof exports === 'object' )
+    else if( typeof exports === 'object' && typeof module === 'object' )
         module.exports = factory();
+    else if(typeof exports === 'object')
+        exports["FormValidator"] = factory();
     else
         root.FormValidator = factory();
 }(this, function(){
