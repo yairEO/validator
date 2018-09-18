@@ -7,7 +7,7 @@ The Validator is cross-browser and will give you the power to use future-proof i
 
     npm i @yaireo/validator --save
 
-    // The to use:
+    // usage:
 
     import FormValidator from '@yaireo/validator'
 
