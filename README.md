@@ -3,8 +3,16 @@ validator
 The Validator is cross-browser and will give you the power to use future-proof input types such as
 `tel`, `email`, `number`, `date`, `time`, `checkbox` and `url`.
 
-
 # [DEMO PAGE](http://yaireo.github.io/validator)
+
+    npm i @yaireo/validator --save
+
+    // The to use:
+
+    import FormValidator from '@yaireo/validator'
+
+    // or download the `validator.js` file and add load it inside your HTML file
+    <script src='validator.js'></script>
 
 ### Why should you use this?
 
