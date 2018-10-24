@@ -1,13 +1,13 @@
-validator
+[validator](http://yaireo.github.io/validator)
 =========
-The Validator is cross-browser and will give you the power to use future-proof input types such as
-`tel`, `email`, `number`, `date`, `time`, `checkbox` and `url`.
+A form validator tool (cross-browser) that's flexible to configre, easy to use & lightweight.
 
-# [DEMO PAGE](http://yaireo.github.io/validator)
+
+## Installing
 
     npm i @yaireo/validator --save
 
-    // usage:
+## Setup
 
     import FormValidator from '@yaireo/validator'
 
@@ -44,7 +44,7 @@ These input types can be validated by the the JS for – `<input type='foo' name
 * Hidden – Hidden fields can also have the ‘required’ attribute
 
 
-## Basic semantics
+## Basic Form semantics
     <form action="" method="post" novalidate>
     	<fieldset>
     		<div class="field">
