@@ -61,7 +61,7 @@
                 alphanumeric : /^[a-zA-Z0-9]+$/i,
                 email        : {
                     illegalChars : /[\(\)\<\>\,\;\:\\\/\"\[\]]/,
-                    filter       : /^.+@.+\..{2,6}$/ // exmaple email "steve@s-i.photo"
+                    filter       : /^.+@.+\..{2,63}$/ // exmaple email "steve@s-i.photo"
                 }
             },
             classes : {
