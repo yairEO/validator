@@ -445,15 +445,12 @@
                 return false;
             })
 
-            var parent;
-
             // traverse parents
             while (el) {
-                parent = el.parentElement;
-                if (parent && parent[matchesFn](selector)) {
-                    return parent;
-                }
-                el = parent;
+                if (el && el[matchesFn](selector))
+                    return el;
+
+                el = el.parentElement
             }
 
             return null;
