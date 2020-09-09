@@ -1,5 +1,5 @@
 /*
-    Validator v3.3.6
+    Validator v3.3.7
     (c) Yair Even Or
     https://github.com/yairEO/validator
 */
@@ -171,30 +171,20 @@
                 }
 
                 if( data.pattern ){
-                    var regex, jsRegex;
+                    var regex = this.settings.regex[data.pattern];
 
-                    switch( data.pattern ){
-                        case 'alphanumeric' :
-                            regex = this.settings.regex.alphanumeric
-                            break;
-                        case 'numeric' :
-                            regex = this.settings.regex.numeric
-                            break;
-                        case 'phone' :
-                            regex = this.settings.regex.phone
-                            break;
-                        default :
-                            regex = data.pattern;
-                    }
+                    if( !regex )
+                        regex = data.pattern;
+
                     try{
-                        jsRegex = new RegExp(regex).test(data.value);
+                        var jsRegex = new RegExp(regex).test(data.value);
                         if( data.value && !jsRegex ){
-                            return this.texts.invalid;
+                            return this.texts.invalid
                         }
                     }
                     catch(err){
                         console.warn(err, field, 'regex is invalid');
-                        return this.texts.invalid;
+                        return this.texts.invalid
                     }
                 }
 
