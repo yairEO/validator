@@ -33,20 +33,20 @@ HTML5 offers a wide selection of input types. I saw no need to support them all,
 For a full list of all the available Types, visit the working draft page.
 These input types can be validated by the the JS for – `<input type='foo' name='bar' />`. (Support is synthesized)
 
-✔️ Text <br/>
-✔️ Email <br/>
-✔️ Password <br/>
-✔️ Number <br/>
-✔️ Date <br/>
-✔️ Time <br/>
-✔️ URL <br/>
-✔️ Search <br/>
-✔️ File <br/>
-✔️ Tel <br/>
-✔️ Checkbox <br/>
-✔️ Select <br/>
-✔️ Textarea <br/>
-✔️ Hidden – Hidden fields can also have the ‘required’ attribute
+✔️ `text` <br/>
+✔️ `email` <br/>
+✔️ `password` (also comparing "re-type password" inputs<br/>
+✔️ `number` <br/>
+✔️ `date` <br/>
+✔️ `time` <br/>
+✔️ `uRL` <br/>
+✔️ `search` <br/>
+✔️ `file` <br/>
+✔️ `tel` <br/>
+✔️ `checkbox` <br/>
+✔️ `select` <br/>
+✔️ `textarea`<br/>
+✔️ `hidden` – Hidden fields can also have the ‘required’ attribute
 
 
 ## Basic semantics
