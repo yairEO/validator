@@ -86,6 +86,7 @@
                 phone        : /^\+?([0-9]|[-|' '])+$/i,
                 numeric      : /^[0-9]+$/i,
                 alphanumeric : /^[a-zA-Z0-9]+$/i,
+                time         : /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/,
                 email        : {
                     illegalChars : /[\(\)\<\>\,\;\:\\\/\"\[\]]/,
                     filter       : /^.+@.+\..{2,24}$/ // exmaple email "steve@s-i.photo"
@@ -234,24 +235,23 @@
                     return this.texts.date;
                 }
                 catch(er){
-                    return this.texts.date;
+                    return this.texts.date
                 }
             },
 
             time : function( field, data ){
-                var pattern = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
+                var pattern = this.settings.regex.time;
                 if( pattern.test(data.value) )
                     return true;
                 else
-                    return this.texts.time;
+                    return this.texts.time
             },
 
             url : function( field, data ){
-                // minimalistic URL validation
                 if( !this.settings.regex.url.test(data.value) )
                     return this.texts.url;
 
-                return true;
+                return true
             },
 
             hidden : function( field, data ){
@@ -263,7 +263,7 @@
                         return this.texts.invalid;
                 }
 
-                return true;
+                return true
             },
 
             select : function( field, data ){
@@ -273,7 +273,7 @@
             checkbox : function( field, data ){
                 if( field.checked ) return true;
 
-                return this.texts.checked;
+                return this.texts.checked
             }
         },
 
