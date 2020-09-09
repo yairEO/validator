@@ -35,7 +35,7 @@ These input types can be validated by the the JS for – `<input type='foo' name
 
 ✔️ `text` <br/>
 ✔️ `email` <br/>
-✔️ `password` (also comparing "re-type password" inputs<br/>
+✔️ `password` - also comparing "re-type password" inputs<br/>
 ✔️ `number` <br/>
 ✔️ `date` <br/>
 ✔️ `time` <br/>
@@ -46,7 +46,7 @@ These input types can be validated by the the JS for – `<input type='foo' name
 ✔️ `checkbox` <br/>
 ✔️ `select` <br/>
 ✔️ `textarea`<br/>
-✔️ `hidden` – Hidden fields can also have the ‘required’ attribute
+✔️ `hidden` – can also have the ‘required’ attribute
 
 
 ## Basic semantics
