@@ -30,8 +30,8 @@ The Validator is cross-browser and will give you the power to use future-proof i
 ## Validation types support
 HTML5 offers a wide selection of input types. I saw no need to support them all, for example, a checkbox should not be validated as ‘required’ because why wouldn’t it be checked in the first place when the form is rendered?
 
-For a full list of all the available Types, visit the working draft page.
-These input types can be validated by the the JS for – `<input type='foo' name='bar' />`. (Support is synthesized)
+For a full list of all the available types, visit the working draft page.
+These input types can be validated by the JS for – `<input type='foo' name='bar' />`. (Support is synthesized)
 
 ✔️ `text` <br/>
 ✔️ `email` <br/>
@@ -76,7 +76,7 @@ These input types can be validated by the the JS for – `<input type='foo' name
 ```
 
 First, obviously, there is a Form element with the novalidate attribute to make sure to disable the native HTML5 validations (which currently suck). proceeding it there is a Fieldset element which is not a must, but acts as a “binding” box for a group of fields that are under the same “category”. For bigger forms there are many times field groups that are visually separated from each other for example. Now, we treat every form field element the user interacts with, whatsoever, as an “field”, and therefor these “fields” will be wraped with `<div class='field'>`. This isolation gives great powers.
-Next, inside an field, there will typically be an input or select or something of the sort, so they are put inside a `<label>` element, to get rid of the (annoying) for attribute, on the label (which also require us to give an ID to the form field element), and now when a user clicks on the label, the field will get focused. great. Going back to the label’s text itself, we wrap it with a `<span>` to have control over it’s style.
+Next, inside a field, there will typically be an input or select or something of the sort, so they are put inside a `<label>` element, to get rid of the (annoying) for attribute, on the label (which also requires us to give an ID to the form field element), and now when a user clicks on the label, the field will get focused. Great. Going back to the label’s text itself, we wrap it with a `<span>` to have control over it’s style.
 
 The whole approach here is to define each form field (input, select, whatever) as much as possible with HTML5 attributes and also with custom attributes.
 
@@ -87,11 +87,11 @@ The whole approach here is to define each form field (input, select, whatever) a
 |---------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | <pre>required</pre>                   | Defines that this field should be validated (with JS by my implementation and not via native HTML5 browser defaults)                                                                                                                                                                                                            |
 | <pre>placeholder</pre>                | Writes some placeholder text which usually describes the fields with some example input (not supported in IE8 and below)                                                                                                                                                                                                        |
-| <pre>pattern</pre>                    | Defines a pattern which the field is evaluated with. Out-of-the-boxvailable values are:<br>**numeric** - Allow only numbers<br>**alphanumeric** - Allow only numbers or letters. No special language characters<br>**phone** - Allow only numbers, spaces or dashes.<br><br>Alternatively, you may write your own custom regex here as well |
+| <pre>pattern</pre>                    | Defines a pattern which the field is evaluated with. Out-of-the-box available values are:<br>**numeric** - Allow only numbers<br>**alphanumeric** - Allow only numbers or letters. No special language characters<br>**phone** - Allow only numbers, spaces or dashes.<br><br>Alternatively, you may write your own custom regex here as well |
 | <pre>data-validate-words</pre>        | Defines the minimum amount of words for this field                                                                                                                                                                                                                                                                              |
 | <pre>data-validate-length</pre>       | Defines the length allowed for the field (after trim). Example value: `7,11` (field can only have 7 or 11 characters). you can add how many allowed lengths you wish                                                                                                                                                            |
 | <pre>data-validate-length-range</pre> | Defines the minimum and/or maximum number of chars in the field (after trim). value can be `4,8` for example, or just `4` to set minimum chars only                                                                                                                                                                             |
-| <pre>data-validate-linked</pre>       | Defines the field which the current field’s value (the attribute is set on) should be compared to. Value can be a selector or another input's `name` attribute's value                                                                                                                                                          |
+| <pre>data-validate-linked</pre>       | Defines the field which the current field value (the attribute is set on) should be compared to. Value can be a selector or another input's `name` attribute's value                                                                                                                                                          |
 | <pre>data-validate-minmax</pre>       | For type `number` only. Defines the minimum and/or maximum value that can be in that field                                                                                                                                                                                                                                      |
 
 ### `pattern` attribute
@@ -139,7 +139,7 @@ This is the object which holds all the texts used by the form validator:
 }
 ```
 
-This object can be extended easily. The idea is to extend it with new keys which represent the name of the field you want the message to be linked to, and that custom message appear as the `general error` one. Default messages can be over-ride.
+This object can be extended easily. The idea is to extend it with new keys which represent the name of the field you want the message to be linked to, and that custom message appear as the `general error` one. Default messages can be over-ridden.
 Example: for a given type ‘date’ field, lets set a custom (general error) message like so:
 
 ```js
@@ -226,7 +226,7 @@ validator.events(['blur', 'input', 'change']);
 
 ## Tooltips (for each field which did not validate)
 
-The helper tooltips **&lt;div class='tooltip help'&gt;**, which work using pure CSS, are element which holds a small **'?'** icon and when hovered over with the mouse, reveals a text explaining what the field “field” is about or for example, what the allowed input format is.
+The helper tooltips **&lt;div class='tooltip help'&gt;**, which work using pure CSS, are elements which hold a small **'?'** icon and when hovered over with the mouse, reveal a text explaining what the field “field” is about or for example, what the allowed input format is.
 
 ## Classes
 `validator.settings.classes` object can be modified:
@@ -248,4 +248,4 @@ validator.settings.classes.bad = 'error';
 ## Bonus – multifields
 
 I have a cool feature I wrote which I call *"multifields"*.
-These are fields which are often use as to input a credit card or a serial number, and are actually a bunch of input fields which are “connected” to each other, and treated as one. You can see it in the demo page, and it’s included in ‘multifield.js’ file.
+These are fields which are often used to input a credit card or a serial number, and are actually a bunch of input fields which are “connected” to each other, and treated as one. You can see it in the demo page, and it’s included in the ‘multifield.js’ file.
