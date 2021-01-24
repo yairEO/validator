@@ -12,6 +12,9 @@
     "email" : "vsync.design@gmail.com"
   },
   "main" : "validator.js",
+  "files": [
+    "validator.js"
+  ],
   "repository" : {
     "type" : "git",
     "url"  : "git+https://github.com/yairEO/validator.git"

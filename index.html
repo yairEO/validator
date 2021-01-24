@@ -78,6 +78,12 @@
 					</div>
 					<div class="field">
 						<label>
+							<span>Multiple emails</span>
+							<input name="email-multi" required="required" type="email" multiple />
+						</label>
+					</div>
+					<div class="field">
+						<label>
 							<span>Confirm email address</span>
 							<input type="email" class='email' name="confirm_email" data-validate-linked='email' required='required'>
 						</label>
@@ -240,23 +246,22 @@
 	<script>
 		// initialize a validator instance from the "FormValidator" constructor.
         // A "<form>" element is optionally passed as an argument, but is not a must
-		var validator = new FormValidator({"events" : ['blur', 'input', 'change']}, document.forms[0]);
+		var validator = new FormValidator({"events" : ['blur', 'paste', 'change']}, document.forms[0]);
 
 
         // on form "submit" event
 		document.forms[0].onsubmit = function(e){
 			var submit = true,
-				validatorResult = validator.checkAll(this);
+					validatorResult = validator.checkAll(this);
 
 			console.log(validatorResult);
 			return !!validatorResult.valid;
-		};
+		}
 
-
-        // on form "reset" event
-        document.forms[0].onreset = function(e){
-            validator.reset();
-        };
+		// on form "reset" event
+		document.forms[0].onreset = function(e){
+				validator.reset();
+		}
 
         // stuff related ONLY for this demo page:
 		$('.toggleValidationTooltips').change(function(){
