@@ -518,8 +518,8 @@
             testResult = this.tests.hasValue.call(this, data.value);
 
             // if the field has value, check if that value is same as placeholder
-            if( testResult === true )
-                testResult = this.tests.sameAsPlaceholder.call(this, field, data );
+            // if( testResult === true )
+            //     testResult = this.tests.sameAsPlaceholder.call(this, field, data );
 
             data.valid = optional || testResult === true;
 
