@@ -60,7 +60,7 @@
 						<label>
 							<span>HTML5 Regex</span>
 							<!--<input required="required" type="text" pattern='\d+' />-->
-							<input type="text" data-validate-length-range="2,6" required="required" placeholder="eg. 123456" pattern="alphanumeric" />
+							<input type="text" name="mySpecialInput" data-validate-length-range="2,6" required="required" placeholder="eg. 123456" pattern="alphanumeric"  data-validate-text-invalid='Please follow the pattern rules' />
 						</label>
 						<div class='tooltip help'>
 							<span>?</span>
@@ -248,6 +248,7 @@
         // A "<form>" element is optionally passed as an argument, but is not a must
 		var validator = new FormValidator({"events" : ['blur', 'paste', 'change']}, document.forms[0]);
 
+		validator.texts.mySpecialInput = "wrong input" // custom error message for pattern mismatch
 
         // on form "submit" event
 		document.forms[0].onsubmit = function(e){

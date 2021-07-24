@@ -185,7 +185,7 @@
                     try{
                         var jsRegex = new RegExp(regex).test(data.value);
                         if( data.value && !jsRegex ){
-                            return this.texts.invalid
+                            return data.invaildtext || this.texts[field.name] || this.texts.invalid
                         }
                     }
                     catch(err){
@@ -424,11 +424,12 @@
 
             /* Gather Custom data attributes for specific validation:
             */
-            this.data[id].validateWords  = field.getAttribute('data-validate-words')        || 0;
+            this.data[id].validateWords  = field.getAttribute('data-validate-words') || 0;
             this.data[id].lengthRange    = field.getAttribute('data-validate-length-range') ? (field.getAttribute('data-validate-length-range')+'').split(',') : [1];
-            this.data[id].lengthLimit    = field.getAttribute('data-validate-length')       ? (field.getAttribute('data-validate-length')+'').split(',')       : false;
-            this.data[id].minmax         = field.getAttribute('data-validate-minmax')       ? (field.getAttribute('data-validate-minmax')+'').split(',')       : false; // for type 'number', defines the minimum and/or maximum for the value as a number.
+            this.data[id].lengthLimit    = field.getAttribute('data-validate-length') ? (field.getAttribute('data-validate-length')+'').split(',') : false;
+            this.data[id].minmax         = field.getAttribute('data-validate-minmax') ? (field.getAttribute('data-validate-minmax')+'').split(',') : false; // for type 'number', defines the minimum and/or maximum for the value as a number.
             this.data[id].validateLinked = field.getAttribute('data-validate-linked');
+            this.data[id].invaildtext    = field.getAttribute('data-validate-text-invalid');
 
             return this.data[id];
         },
