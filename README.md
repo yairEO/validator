@@ -116,7 +116,7 @@ There is also support for optional fields, which are not validated, unless they 
 
 ```js
 {
-    invalid         : 'inupt is not as expected',
+    invalid         : 'input is not as expected',
     short           : 'input is too short',
     long            : 'input is too long',
     checked         : 'must be checked',
